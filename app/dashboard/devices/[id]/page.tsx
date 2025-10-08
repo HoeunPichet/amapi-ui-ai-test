@@ -32,7 +32,9 @@ import {
   User,
   Building,
   Key,
-  QrCode
+  QrCode,
+  Check,
+  X
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -102,8 +104,6 @@ export default function DeviceDetailPage() {
     processor: "Snapdragon 8 Gen 3",
     ramTotal: 8,
     ramAvailable: 3.2,
-    storageTotal: 128,
-    storageUsed: 64,
     storageFree: 64,
     enrollmentToken: "ENR-ABC123XYZ",
     location: "Seoul, South Korea",
@@ -303,12 +303,12 @@ export default function DeviceDetailPage() {
               <HardDrive className="w-6 h-6 text-purple-600" />
             </div>
             <span className="text-sm text-slate-500">
-              {device.storageUsed}GB / {device.storageTotal}GB
+              {device.storageUsed || 0}GB / {device.storageTotal || 0}GB
             </span>
           </div>
           <div>
             <p className="text-2xl font-bold text-slate-900 mb-1">
-              {Math.round((device.storageUsed / device.storageTotal) * 100)}%
+              {Math.round(((device.storageUsed || 0) / (device.storageTotal || 1)) * 100)}%
             </p>
             <p className="text-sm text-slate-600">Storage Used</p>
           </div>
@@ -495,17 +495,17 @@ export default function DeviceDetailPage() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600">Total RAM:</span>
-                      <span className="font-medium text-slate-800">{device.ramTotal}GB</span>
+                      <span className="font-medium text-slate-800">{device.ramTotal || 0}GB</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600">Available RAM:</span>
-                      <span className="font-medium text-slate-800">{device.ramAvailable?.toFixed(1)}GB</span>
+                      <span className="font-medium text-slate-800">{device.ramAvailable?.toFixed(1) || 0}GB</span>
                     </div>
                     <div className="w-full bg-slate-200 rounded-full h-2">
                       <div 
                         className="bg-primary-500 h-2 rounded-full transition-all duration-300"
                         style={{ 
-                          width: `${((device.ramTotal - (device.ramAvailable || 0)) / device.ramTotal) * 100}%` 
+                          width: `${(((device.ramTotal || 0) - (device.ramAvailable || 0)) / (device.ramTotal || 0)) * 100}%` 
                         }}
                       ></div>
                     </div>
@@ -522,21 +522,21 @@ export default function DeviceDetailPage() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600">Total Storage:</span>
-                      <span className="font-medium text-slate-800">{device.storageTotal}GB</span>
+                      <span className="font-medium text-slate-800">{device.storageTotal || 0}GB</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600">Used Storage:</span>
-                      <span className="font-medium text-slate-800">{device.storageUsed}GB</span>
+                      <span className="font-medium text-slate-800">{device.storageUsed || 0}GB</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-600">Free Storage:</span>
-                      <span className="font-medium text-slate-800">{device.storageFree}GB</span>
+                      <span className="font-medium text-slate-800">{device.storageFree || 0}GB</span>
                     </div>
                     <div className="w-full bg-slate-200 rounded-full h-2">
                       <div 
                         className="bg-primary-500 h-2 rounded-full transition-all duration-300"
                         style={{ 
-                          width: `${(device.storageUsed / device.storageTotal) * 100}%` 
+                          width: `${((device.storageUsed || 0) / (device.storageTotal || 1)) * 100}%` 
                         }}
                       ></div>
                     </div>

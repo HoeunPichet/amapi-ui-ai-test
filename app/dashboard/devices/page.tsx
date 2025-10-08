@@ -102,8 +102,6 @@ export default function DevicesPage() {
       processor: "Snapdragon 8 Gen 3",
       ramTotal: 8,
       ramAvailable: 3.2,
-      storageTotal: 128,
-      storageUsed: 64,
       storageFree: 64,
       enrollmentToken: "ENR-ABC123XYZ"
     },
@@ -136,8 +134,8 @@ export default function DevicesPage() {
       processor: "Google Tensor G3",
       ramTotal: 12,
       ramAvailable: 5.8,
-      storageTotal: 256,
-      storageUsed: 89,
+      // storageTotal: 256,
+      // storageUsed: 89,
       storageFree: 167,
       enrollmentToken: "ENR-DEF456UVW"
     }
