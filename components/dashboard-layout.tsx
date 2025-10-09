@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
@@ -14,6 +14,7 @@ import {
   Building, 
   Building2,
   Users,
+  User,
   Menu,
   Search,
   Bell,
@@ -22,20 +23,23 @@ import {
   X,
   ActivityIcon,
   Grid3X3,
-  FolderOpen
+  FolderOpen,
+  ChevronLeft,
+  ChevronRight,
+  Settings,
+  ChevronDown
 } from "lucide-react"
 
 const navigation = [
-  { name: "Home", href: "/home", icon: Home, color: "text-blue-500" },
-  { name: "Dashboard", href: "/dashboard", icon: ActivityIcon, color: "text-slate-500" },
-  { name: "Devices", href: "/dashboard/devices", icon: Smartphone, color: "text-green-500" },
-  { name: "Policies", href: "/dashboard/policies", icon: Shield, color: "text-purple-500" },
-  { name: "Applications", href: "/dashboard/applications", icon: Grid3X3, color: "text-emerald-500" },
-  { name: "Collections", href: "/dashboard/collections", icon: FolderOpen, color: "text-teal-500" },
-  { name: "Tokens", href: "/dashboard/tokens", icon: Key, color: "text-orange-500" },
-  { name: "Enterprises", href: "/dashboard/enterprises", icon: Building, color: "text-pink-500" },
-  { name: "Departments", href: "/dashboard/departments", icon: Building2, color: "text-indigo-500" },
-  { name: "Users", href: "/dashboard/users", icon: Users, color: "text-cyan-500" },
+  { name: "Dashboard", href: "/dashboard", icon: ActivityIcon, color: "text-blue-600" },
+  { name: "Devices", href: "/dashboard/devices", icon: Smartphone, color: "text-green-600" },
+  { name: "Policies", href: "/dashboard/policies", icon: Shield, color: "text-purple-600" },
+  { name: "Applications", href: "/dashboard/applications", icon: Grid3X3, color: "text-emerald-600" },
+  { name: "Collections", href: "/dashboard/collections", icon: FolderOpen, color: "text-teal-600" },
+  { name: "Tokens", href: "/dashboard/tokens", icon: Key, color: "text-orange-600" },
+  { name: "Enterprises", href: "/dashboard/enterprises", icon: Building, color: "text-pink-600" },
+  { name: "Departments", href: "/dashboard/departments", icon: Building2, color: "text-indigo-600" },
+  { name: "Users", href: "/dashboard/users", icon: Users, color: "text-cyan-600" },
 ]
 
 export default function DashboardLayout({
@@ -44,12 +48,29 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const pathname = usePathname()
   const { user, logout } = useAuth()
+  const profileDropdownRef = useRef<HTMLDivElement>(null)
 
   const handleLogout = async () => {
     await logout()
   }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setProfileDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -62,8 +83,8 @@ export default function DashboardLayout({
           className="fixed inset-0 bg-black/60 backdrop-blur-sm" 
           onClick={() => setSidebarOpen(false)} 
         />
-        <div className="fixed inset-y-0 left-0 w-72 bg-white/95 backdrop-blur-xl shadow-2xl border-r border-white/20">
-          <div className="flex items-center justify-between p-6 border-b border-primary-200">
+        <div className="fixed inset-y-0 left-0 w-72 bg-white/95 backdrop-blur-xl shadow-2xl border-r border-white/20 flex flex-col">
+          <div className="flex items-center justify-between p-6 border-b border-primary-200 flex-shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg">
                 <Shield className="w-5 h-5 text-white" />
@@ -84,118 +105,130 @@ export default function DashboardLayout({
               <X className="w-5 h-5" />
             </Button>
           </div>
-          <nav className="p-4 space-y-2">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href
-              const IconComponent = item.icon
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
-                    isActive
-                      ? "bg-primary-500 text-white shadow-lg transform scale-[1.02]"
-                      : "text-slate-600 hover:bg-primary-50 hover:text-primary-700 hover:shadow-md hover:transform hover:scale-[1.01]"
-                  )}
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <IconComponent 
+          
+          {/* Scrollable navigation */}
+          <div className="flex-1 overflow-y-auto">
+            <nav className="p-4 space-y-2">
+              {navigation.map((item) => {
+                const isActive = pathname === item.href
+                const IconComponent = item.icon
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
                     className={cn(
-                      "w-5 h-5 transition-colors",
-                      isActive ? "text-white" : item.color
-                    )} 
-                  />
-                  <span className="font-medium">{item.name}</span>
-                  {isActive && (
-                    <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse" />
-                  )}
-                </Link>
-              )
-            })}
-          </nav>
+                      "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
+                      isActive
+                        ? "bg-primary-500 text-white shadow-lg transform scale-[1.02]"
+                        : "text-slate-600 hover:bg-primary-50 hover:text-primary-700 hover:shadow-md hover:transform hover:scale-[1.01]"
+                    )}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                <IconComponent 
+                  className={cn(
+                    "w-5 h-5 transition-colors flex-shrink-0",
+                    isActive ? "text-white" : item.color
+                  )} 
+                />
+                    <span className="font-medium">{item.name}</span>
+                    {isActive && (
+                      <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse" />
+                    )}
+                  </Link>
+                )
+              })}
+            </nav>
+          </div>
+          
         </div>
       </div>
 
       {/* Desktop sidebar */}
-      <div className="lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-72 lg:bg-white/95 lg:backdrop-blur-xl lg:border-r lg:border-white/20 lg:shadow-2xl">
+      <div className={cn(
+        "lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:bg-white/95 lg:backdrop-blur-xl lg:border-r lg:border-white/20 lg:shadow-2xl transition-all duration-300",
+        sidebarCollapsed ? "lg:w-16" : "lg:w-72"
+      )}>
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center gap-3 p-6 border-b border-primary-200">
-            <div className="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center shadow-lg">
-              <Shield className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <span className="font-bold text-2xl text-primary-600">
-                AMAPI
-              </span>
-              <p className="text-sm text-slate-500">Management Hub</p>
-            </div>
+            <Link href="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <div className="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              {!sidebarCollapsed && (
+                <div>
+                  <span className="font-bold text-2xl text-primary-600">
+                    AMAPI
+                  </span>
+                  <p className="text-sm text-slate-500">Management Hub</p>
+                </div>
+              )}
+            </Link>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-2">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href
-              const IconComponent = item.icon
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
-                    isActive
-                      ? "bg-primary-500 text-white shadow-lg transform scale-[1.02]"
-                      : "text-slate-600 hover:bg-primary-50 hover:text-primary-700 hover:shadow-md hover:transform hover:scale-[1.01]"
-                  )}
-                >
-                  <IconComponent 
-                    className={cn(
-                      "w-5 h-5 transition-colors",
-                      isActive ? "text-white" : item.color
-                    )} 
-                  />
-                  <span className="font-medium">{item.name}</span>
-                  {isActive && (
-                    <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse" />
-                  )}
-                </Link>
-              )
-            })}
-          </nav>
-
-          {/* User section */}
-          <div className="p-4 border-t border-primary-200">
-            <div className="flex items-center gap-3 mb-4 p-3 bg-primary-50 rounded-xl">
-              <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center shadow-md">
-                <span className="text-sm font-bold text-white">
-                  {user?.name?.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-900 truncate">
-                  {user?.name}
-                </p>
-                <p className="text-xs text-slate-500 truncate">
-                  {user?.email}
-                </p>
-              </div>
-            </div>
+          {/* Toggle Button */}
+          <div className="absolute top-6 right-0 transform translate-x-1/2">
             <Button
               variant="ghost"
-              size="sm"
-              onClick={handleLogout}
-              className="w-full justify-start text-slate-600 hover:text-red-500 hover:bg-red-50 transition-all duration-200"
+              size="icon"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="w-8 h-8 bg-white border border-primary-200 shadow-md hover:bg-primary-50 hover:text-primary-600 transition-colors"
             >
-              <ActivityIcon name="Logout" size="16" className="mr-2" />
-              Sign out
+              {sidebarCollapsed ? (
+                <ChevronRight className="w-4 h-4" />
+              ) : (
+                <ChevronLeft className="w-4 h-4" />
+              )}
             </Button>
           </div>
+
+          {/* Scrollable Navigation */}
+          <div className="flex-1 overflow-y-auto">
+            <nav className="p-4 space-y-2">
+              {navigation.map((item) => {
+                const isActive = pathname === item.href
+                const IconComponent = item.icon
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
+                      isActive
+                        ? "bg-primary-500 text-white shadow-lg transform scale-[1.02]"
+                        : "text-slate-600 hover:bg-primary-50 hover:text-primary-700 hover:shadow-md hover:transform hover:scale-[1.01]",
+                      sidebarCollapsed && "justify-center"
+                    )}
+                    title={sidebarCollapsed ? item.name : undefined}
+                  >
+                    <IconComponent 
+                      className={cn(
+                        "w-5 h-5 transition-colors flex-shrink-0",
+                        isActive ? "text-white" : sidebarCollapsed ? "text-slate-700" : item.color
+                      )} 
+                    />
+                    {!sidebarCollapsed && (
+                      <>
+                        <span className="font-medium">{item.name}</span>
+                        {isActive && (
+                          <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse" />
+                        )}
+                      </>
+                    )}
+                  </Link>
+                )
+              })}
+            </nav>
+          </div>
+
         </div>
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-72">
+      <div className={cn(
+        "transition-all duration-300",
+        sidebarCollapsed ? "lg:pl-16" : "lg:pl-72"
+      )}>
         {/* Top bar */}
         <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-sm">
           <div className="flex items-center justify-between px-6 py-4">
@@ -226,22 +259,75 @@ export default function DashboardLayout({
             <div className="flex items-center gap-3">
               {/* Quick Actions */}
               <Button variant="ghost" size="icon" className="hover:bg-primary-50 hover:text-primary-600 transition-colors">
-                <Plus className="w-5 h-5" />
+                <Plus className="w-5 h-5 text-slate-600" />
               </Button>
               
               {/* Notifications */}
               <Button variant="ghost" size="icon" className="relative hover:bg-primary-50 hover:text-primary-600 transition-colors">
-                <Bell className="w-5 h-5" />
+                <Bell className="w-5 h-5 text-slate-600" />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-primary-500 rounded-full animate-pulse"></span>
               </Button>
 
-              {/* User menu (mobile) */}
-              <div className="lg:hidden">
-                <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center shadow-md">
-                  <span className="text-sm font-bold text-white">
-                    {user?.name?.charAt(0).toUpperCase()}
-                  </span>
-                </div>
+              {/* User menu */}
+              <div className="relative" ref={profileDropdownRef}>
+                <button
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors"
+                >
+                  <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center shadow-md">
+                    <span className="text-sm font-bold text-white">
+                      {user?.name?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="hidden md:block text-left">
+                    <p className="text-sm font-medium text-slate-900">{user?.name}</p>
+                    <p className="text-xs text-slate-500 capitalize">{user?.role}</p>
+                  </div>
+                  <ChevronDown className="w-4 h-4 text-slate-600" />
+                </button>
+
+                {/* Profile Dropdown */}
+                {profileDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50">
+                    <div className="px-4 py-3 border-b border-slate-100">
+                      <p className="text-sm font-medium text-slate-900">{user?.name}</p>
+                      <p className="text-xs text-slate-500">{user?.email}</p>
+                    </div>
+                    
+                    <div className="py-2">
+                      <Link
+                        href="/dashboard/profile"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                        onClick={() => setProfileDropdownOpen(false)}
+                      >
+                        <User className="w-4 h-4" />
+                        Profile Settings
+                      </Link>
+                      
+                      <Link
+                        href="/dashboard/profile"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                        onClick={() => setProfileDropdownOpen(false)}
+                      >
+                        <Settings className="w-4 h-4" />
+                        Account Settings
+                      </Link>
+                    </div>
+                    
+                    <div className="border-t border-slate-100 pt-2">
+                      <button
+                        onClick={() => {
+                          setProfileDropdownOpen(false)
+                          handleLogout()
+                        }}
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Sign out
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

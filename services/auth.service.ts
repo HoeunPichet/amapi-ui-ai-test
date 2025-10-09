@@ -6,9 +6,36 @@ const STATIC_CREDENTIALS = {
   password: "admin123"
 }
 
+const GOOGLE_CREDENTIALS = {
+  email: "admin.google@gmail.com",
+  name: "Google Admin"
+}
+
 export interface LoginCredentials {
   email: string
   password: string
+}
+
+export interface GoogleLoginCredentials {
+  email: string
+  name: string
+  googleId: string
+}
+
+export interface RegisterCredentials {
+  name: string
+  email: string
+  password: string
+}
+
+export interface ProfileUpdateCredentials {
+  name: string
+  email: string
+}
+
+export interface PasswordChangeCredentials {
+  currentPassword: string
+  newPassword: string
 }
 
 export interface AuthResponse {
@@ -50,6 +77,7 @@ class AuthService {
         email: credentials.email,
         role: "admin",
         status: "active",
+        loginMethod: "email",
         avatar: "/avatars/admin.png",
         lastLogin: new Date(),
         createdAt: new Date("2024-01-01"),
@@ -77,6 +105,171 @@ class AuthService {
     return {
       success: false,
       message: "Invalid email or password"
+    }
+  }
+
+  async loginWithGoogle(credentials: GoogleLoginCredentials): Promise<AuthResponse> {
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    // Simulate Google login - accept any Google credentials for demo
+    const user: User = {
+      id: "2",
+      name: credentials.name,
+      email: credentials.email,
+      role: "admin",
+      status: "active",
+      loginMethod: "google",
+      avatar: "/avatars/google-admin.png",
+      lastLogin: new Date(),
+      createdAt: new Date("2024-01-01"),
+      updatedAt: new Date()
+    }
+    
+    const token = this.generateToken()
+    this.currentUser = user
+    this.token = token
+    
+    if (typeof window !== "undefined") {
+      localStorage.setItem("amapi_user", JSON.stringify(user))
+      localStorage.setItem("amapi_token", token)
+    }
+    
+    return { success: true, user, token }
+  }
+
+  async register(credentials: RegisterCredentials): Promise<AuthResponse> {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    // Check if email already exists (in a real app, this would be a database check)
+    if (credentials.email === STATIC_CREDENTIALS.email) {
+      return {
+        success: false,
+        message: "An account with this email already exists"
+      }
+    }
+
+    // Create new user
+    const user: User = {
+      id: Date.now().toString(), // Simple ID generation
+      name: credentials.name,
+      email: credentials.email,
+      role: "user", // Default role for new registrations
+      status: "active",
+      loginMethod: "email",
+      avatar: "/avatars/default.png",
+      lastLogin: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+
+    const token = this.generateToken()
+
+    this.currentUser = user
+    this.token = token
+
+    // Store in localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem("amapi_user", JSON.stringify(user))
+      localStorage.setItem("amapi_token", token)
+    }
+
+    return {
+      success: true,
+      user,
+      token
+    }
+  }
+
+  async updateProfile(credentials: ProfileUpdateCredentials): Promise<AuthResponse> {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    if (!this.currentUser) {
+      return {
+        success: false,
+        message: "No user logged in"
+      }
+    }
+
+    // Check if email is being changed and if it already exists
+    if (credentials.email !== this.currentUser.email && credentials.email === STATIC_CREDENTIALS.email) {
+      return {
+        success: false,
+        message: "An account with this email already exists"
+      }
+    }
+
+    // Update user information
+    const updatedUser: User = {
+      ...this.currentUser,
+      name: credentials.name,
+      email: credentials.email,
+      updatedAt: new Date()
+    }
+
+    this.currentUser = updatedUser
+
+    // Update localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem("amapi_user", JSON.stringify(updatedUser))
+    }
+
+    return {
+      success: true,
+      user: updatedUser,
+      message: "Profile updated successfully"
+    }
+  }
+
+  async changePassword(credentials: PasswordChangeCredentials): Promise<AuthResponse> {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    if (!this.currentUser) {
+      return {
+        success: false,
+        message: "No user logged in"
+      }
+    }
+
+    // Google users cannot change password
+    if (this.currentUser.loginMethod === "google") {
+      return {
+        success: false,
+        message: "Google users cannot change password through this system"
+      }
+    }
+
+    // For demo purposes, check if current password matches the static admin password
+    // In a real app, this would verify against the stored password hash
+    if (this.currentUser.email === STATIC_CREDENTIALS.email && credentials.currentPassword !== STATIC_CREDENTIALS.password) {
+      return {
+        success: false,
+        message: "Current password is incorrect"
+      }
+    }
+
+    // For other users, we'll accept any current password for demo purposes
+    // In a real app, you'd verify the actual stored password
+
+    // Update user (in a real app, you'd update the password hash)
+    const updatedUser: User = {
+      ...this.currentUser,
+      updatedAt: new Date()
+    }
+
+    this.currentUser = updatedUser
+
+    // Update localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem("amapi_user", JSON.stringify(updatedUser))
+    }
+
+    return {
+      success: true,
+      user: updatedUser,
+      message: "Password changed successfully"
     }
   }
 

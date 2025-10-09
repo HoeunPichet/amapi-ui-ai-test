@@ -2,12 +2,16 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { User } from "@/types"
-import { authService, LoginCredentials } from "@/services/auth.service"
+import { authService, LoginCredentials, GoogleLoginCredentials, RegisterCredentials, ProfileUpdateCredentials, PasswordChangeCredentials } from "@/services/auth.service"
 
 interface AuthContextType {
   user: User | null
   loading: boolean
   login: (credentials: LoginCredentials) => Promise<boolean>
+  loginWithGoogle: (credentials: GoogleLoginCredentials) => Promise<boolean>
+  register: (credentials: RegisterCredentials) => Promise<boolean>
+  updateProfile: (credentials: ProfileUpdateCredentials) => Promise<boolean>
+  changePassword: (credentials: PasswordChangeCredentials) => Promise<boolean>
   logout: () => Promise<void>
   isAuthenticated: boolean
   hasRole: (role: User["role"]) => boolean
@@ -44,6 +48,74 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const loginWithGoogle = async (credentials: GoogleLoginCredentials): Promise<boolean> => {
+    setLoading(true)
+    try {
+      const response = await authService.loginWithGoogle(credentials)
+      if (response.success && response.user) {
+        setUser(response.user)
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error("Google login error:", error)
+      return false
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const register = async (credentials: RegisterCredentials): Promise<boolean> => {
+    setLoading(true)
+    try {
+      const response = await authService.register(credentials)
+      if (response.success && response.user) {
+        setUser(response.user)
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error("Registration error:", error)
+      return false
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const updateProfile = async (credentials: ProfileUpdateCredentials): Promise<boolean> => {
+    setLoading(true)
+    try {
+      const response = await authService.updateProfile(credentials)
+      if (response.success && response.user) {
+        setUser(response.user)
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error("Profile update error:", error)
+      return false
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const changePassword = async (credentials: PasswordChangeCredentials): Promise<boolean> => {
+    setLoading(true)
+    try {
+      const response = await authService.changePassword(credentials)
+      if (response.success && response.user) {
+        setUser(response.user)
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error("Password change error:", error)
+      return false
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const logout = async (): Promise<void> => {
     setLoading(true)
     try {
@@ -68,6 +140,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     loading,
     login,
+    loginWithGoogle,
+    register,
+    updateProfile,
+    changePassword,
     logout,
     isAuthenticated: !!user,
     hasRole,
