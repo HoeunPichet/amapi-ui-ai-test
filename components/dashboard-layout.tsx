@@ -39,7 +39,7 @@ import {
     { name: "Collections", href: "/dashboard/collections", icon: FolderOpen, color: "text-teal-600" },
     { name: "Tokens", href: "/dashboard/tokens", icon: Key, color: "text-orange-600" },
     { name: "Departments", href: "/dashboard/departments", icon: Building2, color: "text-indigo-600" },
-    { name: "Users", href: "/dashboard/users", icon: Users, color: "text-cyan-600" },
+    { name: "Work Profiles", href: "/dashboard/work-profiles", icon: Users, color: "text-cyan-600" },
     { name: "Settings", href: "/dashboard/settings", icon: Settings, color: "text-pink-600" },
   ]
 
@@ -222,7 +222,7 @@ export default function DashboardLayout({
 
           {/* Scrollable Navigation */}
           <div className="flex-1 overflow-y-auto">
-            <nav className="p-4 space-y-2">
+            <nav className={sidebarCollapsed ? "py-4 px-2 space-y-2" : "p-4 space-y-2"}>
               {navigation.map((item) => {
                 const isActive = pathname === item.href
                 const IconComponent = item.icon

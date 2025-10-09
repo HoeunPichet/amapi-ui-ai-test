@@ -6,6 +6,7 @@ import { amapiService } from "@/services/amapi.service"
 import { Device, PaginatedResponse } from "@/types"
 import { Button } from "@/ui/button"
 import { Input } from "@/ui/input"
+import { Pagination } from "@/components/pagination"
 import { 
   Plus, 
   Search, 

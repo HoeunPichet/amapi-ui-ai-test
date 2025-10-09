@@ -6,6 +6,7 @@ import { Department } from "@/types"
 import { useToast } from "@/hooks/use-simple-toast"
 import { Button } from "@/ui/button"
 import { Input } from "@/ui/input"
+import { Pagination } from "@/components/pagination"
 import { Building2, Search, Edit, Trash2, Plus, Users } from "lucide-react"
 import DepartmentModal from "@/components/department-modal"
 
@@ -15,21 +16,48 @@ export default function DepartmentsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingDepartment, setEditingDepartment] = useState<Department | null>(null)
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
+  const [itemsPerPage] = useState(10)
+  
   const { toast } = useToast()
 
   useEffect(() => {
     const load = async () => {
       setLoading(true)
-      const res = await amapiService.getDepartments({ page: 1, limit: 20, search: searchTerm || undefined })
-      if (res.success && res.data) setDepartments(res.data.data)
+      const res = await amapiService.getDepartments({ 
+        page: currentPage, 
+        limit: itemsPerPage, 
+        search: searchTerm || undefined 
+      })
+      if (res.success && res.data) {
+        setDepartments(res.data.data)
+        setTotalItems(res.data.total)
+        setTotalPages(res.data.totalPages)
+      }
       setLoading(false)
     }
     load()
-  }, [searchTerm])
+  }, [currentPage, searchTerm])
 
   const loadDepartments = async () => {
-    const res = await amapiService.getDepartments({ page: 1, limit: 20, search: searchTerm || undefined })
-    if (res.success && res.data) setDepartments(res.data.data)
+    const res = await amapiService.getDepartments({ 
+      page: currentPage, 
+      limit: itemsPerPage, 
+      search: searchTerm || undefined 
+    })
+    if (res.success && res.data) {
+      setDepartments(res.data.data)
+      setTotalItems(res.data.total)
+      setTotalPages(res.data.totalPages)
+    }
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
   }
 
   const handleAdd = () => {
@@ -198,6 +226,16 @@ export default function DepartmentsPage() {
           </div>
         )}
       </div>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        itemsPerPage={itemsPerPage}
+        onPageChange={handlePageChange}
+        isLoading={loading}
+      />
 
       <DepartmentModal
         isOpen={isModalOpen}

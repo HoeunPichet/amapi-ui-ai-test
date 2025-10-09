@@ -9,6 +9,9 @@ import {
   Activity,
   Application,
   ApplicationCollection,
+  WorkProfile,
+  WorkProfileFormData,
+  WorkProfileSearchParams,
   ApiResponse,
   PaginatedResponse,
   PaginationParams
@@ -403,6 +406,12 @@ class AmapiService {
         totalPages: Math.ceil(total / limit)
       }
     }
+  }
+
+  async getPolicyById(id: string): Promise<ApiResponse<Policy>> {
+    const found = this.mockPolicies.find(p => p.id === id)
+    if (!found) return { success: false, error: "Policy not found" }
+    return { success: true, data: found }
   }
 
   async createPolicy(policyData: Omit<Policy, "id" | "createdAt" | "updatedAt">): Promise<ApiResponse<Policy>> {
@@ -835,6 +844,422 @@ class AmapiService {
     collection.updatedAt = new Date()
 
     return { success: true, data: collection }
+  }
+
+  // Work Profile methods
+  private mockWorkProfiles: WorkProfile[] = [
+    {
+      id: "wp-1",
+      username: "john.doe",
+      firstName: "John",
+      lastName: "Doe",
+      phoneNumber: "+1-555-0123",
+      homeAddress: "123 Main St, Anytown, USA",
+      email: "john.doe@company.com",
+      departmentId: "dept-1",
+      departmentName: "Engineering",
+      status: "Active",
+      createdAt: new Date("2024-01-01T00:00:00Z"),
+      updatedAt: new Date("2024-01-15T10:30:00Z")
+    },
+    {
+      id: "wp-2",
+      username: "jane.smith",
+      firstName: "Jane",
+      lastName: "Smith",
+      phoneNumber: "+1-555-0456",
+      homeAddress: "456 Oak Ave, Somewhere, USA",
+      email: "jane.smith@company.com",
+      departmentId: "dept-2",
+      departmentName: "Marketing",
+      status: "Active",
+      createdAt: new Date("2024-01-02T00:00:00Z"),
+      updatedAt: new Date("2024-01-16T14:20:00Z")
+    },
+    {
+      id: "wp-3",
+      username: "bob.wilson",
+      firstName: "Bob",
+      lastName: "Wilson",
+      phoneNumber: "+1-555-0789",
+      email: "bob.wilson@company.com",
+      departmentId: "dept-1",
+      departmentName: "Engineering",
+      status: "Disabled",
+      createdAt: new Date("2024-01-03T00:00:00Z"),
+      updatedAt: new Date("2024-01-17T09:15:00Z")
+    },
+    {
+      id: "wp-4",
+      username: "alice.johnson",
+      firstName: "Alice",
+      lastName: "Johnson",
+      phoneNumber: "+1-555-0321",
+      homeAddress: "789 Pine St, Tech City, USA",
+      email: "alice.johnson@company.com",
+      departmentId: "dept-3",
+      departmentName: "Sales",
+      status: "Active",
+      createdAt: new Date("2024-01-04T00:00:00Z"),
+      updatedAt: new Date("2024-01-18T11:45:00Z")
+    },
+    {
+      id: "wp-5",
+      username: "charlie.brown",
+      firstName: "Charlie",
+      lastName: "Brown",
+      phoneNumber: "+1-555-0654",
+      homeAddress: "321 Elm St, Business District, USA",
+      email: "charlie.brown@company.com",
+      departmentId: "dept-4",
+      departmentName: "HR",
+      status: "Active",
+      createdAt: new Date("2024-01-05T00:00:00Z"),
+      updatedAt: new Date("2024-01-19T08:30:00Z")
+    },
+    {
+      id: "wp-6",
+      username: "diana.prince",
+      firstName: "Diana",
+      lastName: "Prince",
+      phoneNumber: "+1-555-0987",
+      homeAddress: "654 Maple Ave, Downtown, USA",
+      email: "diana.prince@company.com",
+      departmentId: "dept-2",
+      departmentName: "Marketing",
+      status: "Active",
+      createdAt: new Date("2024-01-06T00:00:00Z"),
+      updatedAt: new Date("2024-01-20T15:20:00Z")
+    },
+    {
+      id: "wp-7",
+      username: "eve.adams",
+      firstName: "Eve",
+      lastName: "Adams",
+      phoneNumber: "+1-555-0147",
+      email: "eve.adams@company.com",
+      departmentId: "dept-1",
+      departmentName: "Engineering",
+      status: "Disabled",
+      createdAt: new Date("2024-01-07T00:00:00Z"),
+      updatedAt: new Date("2024-01-21T12:10:00Z")
+    },
+    {
+      id: "wp-8",
+      username: "frank.miller",
+      firstName: "Frank",
+      lastName: "Miller",
+      phoneNumber: "+1-555-0258",
+      homeAddress: "987 Cedar Blvd, Suburbia, USA",
+      email: "frank.miller@company.com",
+      departmentId: "dept-5",
+      departmentName: "Finance",
+      status: "Active",
+      createdAt: new Date("2024-01-08T00:00:00Z"),
+      updatedAt: new Date("2024-01-22T09:55:00Z")
+    },
+    {
+      id: "wp-9",
+      username: "grace.lee",
+      firstName: "Grace",
+      lastName: "Lee",
+      phoneNumber: "+1-555-0369",
+      homeAddress: "147 Birch Lane, Uptown, USA",
+      email: "grace.lee@company.com",
+      departmentId: "dept-3",
+      departmentName: "Sales",
+      status: "Active",
+      createdAt: new Date("2024-01-09T00:00:00Z"),
+      updatedAt: new Date("2024-01-23T14:25:00Z")
+    },
+    {
+      id: "wp-10",
+      username: "henry.davis",
+      firstName: "Henry",
+      lastName: "Davis",
+      phoneNumber: "+1-555-0470",
+      homeAddress: "258 Spruce St, Midtown, USA",
+      email: "henry.davis@company.com",
+      departmentId: "dept-4",
+      departmentName: "HR",
+      status: "Active",
+      createdAt: new Date("2024-01-10T00:00:00Z"),
+      updatedAt: new Date("2024-01-24T10:40:00Z")
+    },
+    {
+      id: "wp-11",
+      username: "iris.wang",
+      firstName: "Iris",
+      lastName: "Wang",
+      phoneNumber: "+1-555-0581",
+      email: "iris.wang@company.com",
+      departmentId: "dept-5",
+      departmentName: "Finance",
+      status: "Disabled",
+      createdAt: new Date("2024-01-11T00:00:00Z"),
+      updatedAt: new Date("2024-01-25T16:15:00Z")
+    },
+    {
+      id: "wp-12",
+      username: "jack.taylor",
+      firstName: "Jack",
+      lastName: "Taylor",
+      phoneNumber: "+1-555-0692",
+      homeAddress: "369 Willow Way, Riverside, USA",
+      email: "jack.taylor@company.com",
+      departmentId: "dept-1",
+      departmentName: "Engineering",
+      status: "Active",
+      createdAt: new Date("2024-01-12T00:00:00Z"),
+      updatedAt: new Date("2024-01-26T13:50:00Z")
+    },
+    {
+      id: "wp-13",
+      username: "kate.moore",
+      firstName: "Kate",
+      lastName: "Moore",
+      phoneNumber: "+1-555-0703",
+      homeAddress: "470 Ash Drive, Hillside, USA",
+      email: "kate.moore@company.com",
+      departmentId: "dept-2",
+      departmentName: "Marketing",
+      status: "Active",
+      createdAt: new Date("2024-01-13T00:00:00Z"),
+      updatedAt: new Date("2024-01-27T11:35:00Z")
+    },
+    {
+      id: "wp-14",
+      username: "liam.white",
+      firstName: "Liam",
+      lastName: "White",
+      phoneNumber: "+1-555-0814",
+      homeAddress: "581 Poplar Place, Valley View, USA",
+      email: "liam.white@company.com",
+      departmentId: "dept-3",
+      departmentName: "Sales",
+      status: "Active",
+      createdAt: new Date("2024-01-14T00:00:00Z"),
+      updatedAt: new Date("2024-01-28T08:20:00Z")
+    },
+    {
+      id: "wp-15",
+      username: "maya.garcia",
+      firstName: "Maya",
+      lastName: "Garcia",
+      phoneNumber: "+1-555-0925",
+      email: "maya.garcia@company.com",
+      departmentId: "dept-4",
+      departmentName: "HR",
+      status: "Disabled",
+      createdAt: new Date("2024-01-15T00:00:00Z"),
+      updatedAt: new Date("2024-01-29T15:45:00Z")
+    },
+    {
+      id: "wp-16",
+      username: "noah.martinez",
+      firstName: "Noah",
+      lastName: "Martinez",
+      phoneNumber: "+1-555-1036",
+      homeAddress: "692 Hickory Heights, Mountain View, USA",
+      email: "noah.martinez@company.com",
+      departmentId: "dept-5",
+      departmentName: "Finance",
+      status: "Active",
+      createdAt: new Date("2024-01-16T00:00:00Z"),
+      updatedAt: new Date("2024-01-30T12:30:00Z")
+    },
+    {
+      id: "wp-17",
+      username: "olivia.anderson",
+      firstName: "Olivia",
+      lastName: "Anderson",
+      phoneNumber: "+1-555-1147",
+      homeAddress: "703 Dogwood Court, Lakeside, USA",
+      email: "olivia.anderson@company.com",
+      departmentId: "dept-1",
+      departmentName: "Engineering",
+      status: "Active",
+      createdAt: new Date("2024-01-17T00:00:00Z"),
+      updatedAt: new Date("2024-01-31T09:15:00Z")
+    },
+    {
+      id: "wp-18",
+      username: "peter.thomas",
+      firstName: "Peter",
+      lastName: "Thomas",
+      phoneNumber: "+1-555-1258",
+      homeAddress: "814 Sycamore Street, Oceanview, USA",
+      email: "peter.thomas@company.com",
+      departmentId: "dept-2",
+      departmentName: "Marketing",
+      status: "Active",
+      createdAt: new Date("2024-01-18T00:00:00Z"),
+      updatedAt: new Date("2024-02-01T14:40:00Z")
+    },
+    {
+      id: "wp-19",
+      username: "quinn.jackson",
+      firstName: "Quinn",
+      lastName: "Jackson",
+      phoneNumber: "+1-555-1369",
+      email: "quinn.jackson@company.com",
+      departmentId: "dept-3",
+      departmentName: "Sales",
+      status: "Active",
+      createdAt: new Date("2024-01-19T00:00:00Z"),
+      updatedAt: new Date("2024-02-02T11:25:00Z")
+    },
+    {
+      id: "wp-20",
+      username: "ruby.martin",
+      firstName: "Ruby",
+      lastName: "Martin",
+      phoneNumber: "+1-555-1470",
+      homeAddress: "925 Magnolia Manor, Garden District, USA",
+      email: "ruby.martin@company.com",
+      departmentId: "dept-4",
+      departmentName: "HR",
+      status: "Active",
+      createdAt: new Date("2024-01-20T00:00:00Z"),
+      updatedAt: new Date("2024-02-03T16:55:00Z")
+    }
+  ]
+
+  async getWorkProfiles(params?: PaginationParams & WorkProfileSearchParams): Promise<ApiResponse<PaginatedResponse<WorkProfile>>> {
+    await this.delay()
+    
+    let filteredProfiles = [...this.mockWorkProfiles]
+    
+    if (params) {
+      if (params.username) {
+        filteredProfiles = filteredProfiles.filter(profile =>
+          profile.username.toLowerCase().includes(params.username!.toLowerCase())
+        )
+      }
+      if (params.departmentId) {
+        filteredProfiles = filteredProfiles.filter(profile =>
+          profile.departmentId === params.departmentId
+        )
+      }
+      if (params.status) {
+        filteredProfiles = filteredProfiles.filter(profile =>
+          profile.status === params.status
+        )
+      }
+    }
+    
+    const total = filteredProfiles.length
+    const page = params?.page || 1
+    const limit = params?.limit || 10
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+
+    return {
+      success: true,
+      data: {
+        data: filteredProfiles.slice(startIndex, endIndex),
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    }
+  }
+
+  async getWorkProfile(id: string): Promise<ApiResponse<WorkProfile>> {
+    await this.delay()
+    
+    const profile = this.mockWorkProfiles.find(p => p.id === id)
+    if (!profile) {
+      return { success: false, error: "Work profile not found" }
+    }
+    
+    return { success: true, data: profile }
+  }
+
+  async createWorkProfile(data: WorkProfileFormData): Promise<ApiResponse<WorkProfile>> {
+    await this.delay()
+    
+    // Check if username already exists
+    const existingProfile = this.mockWorkProfiles.find(p => p.username === data.username)
+    if (existingProfile) {
+      return { success: false, error: "Username already exists" }
+    }
+    
+    // Check if email already exists
+    const existingEmail = this.mockWorkProfiles.find(p => p.email === data.email)
+    if (existingEmail) {
+      return { success: false, error: "Email already exists" }
+    }
+    
+    const newProfile: WorkProfile = {
+      id: `wp-${Date.now()}`,
+      ...data,
+      departmentName: this.mockDepartments.find(d => d.id === data.departmentId)?.name || "Unknown",
+      status: "Active",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+    
+    this.mockWorkProfiles.push(newProfile)
+    return { success: true, data: newProfile }
+  }
+
+  async updateWorkProfile(id: string, data: WorkProfileFormData): Promise<ApiResponse<WorkProfile>> {
+    await this.delay()
+    
+    const profileIndex = this.mockWorkProfiles.findIndex(p => p.id === id)
+    if (profileIndex === -1) {
+      return { success: false, error: "Work profile not found" }
+    }
+    
+    // Check if username already exists (excluding current profile)
+    const existingProfile = this.mockWorkProfiles.find(p => p.username === data.username && p.id !== id)
+    if (existingProfile) {
+      return { success: false, error: "Username already exists" }
+    }
+    
+    // Check if email already exists (excluding current profile)
+    const existingEmail = this.mockWorkProfiles.find(p => p.email === data.email && p.id !== id)
+    if (existingEmail) {
+      return { success: false, error: "Email already exists" }
+    }
+    
+    const updatedProfile: WorkProfile = {
+      ...this.mockWorkProfiles[profileIndex],
+      ...data,
+      departmentName: this.mockDepartments.find(d => d.id === data.departmentId)?.name || "Unknown",
+      updatedAt: new Date()
+    }
+    
+    this.mockWorkProfiles[profileIndex] = updatedProfile
+    return { success: true, data: updatedProfile }
+  }
+
+  async deleteWorkProfile(id: string): Promise<ApiResponse<void>> {
+    await this.delay()
+    
+    const index = this.mockWorkProfiles.findIndex(p => p.id === id)
+    if (index === -1) {
+      return { success: false, error: "Work profile not found" }
+    }
+    
+    this.mockWorkProfiles.splice(index, 1)
+    return { success: true }
+  }
+
+  async toggleWorkProfileStatus(id: string, status: "Active" | "Disabled"): Promise<ApiResponse<WorkProfile>> {
+    await this.delay()
+    
+    const profileIndex = this.mockWorkProfiles.findIndex(p => p.id === id)
+    if (profileIndex === -1) {
+      return { success: false, error: "Work profile not found" }
+    }
+    
+    this.mockWorkProfiles[profileIndex].status = status
+    this.mockWorkProfiles[profileIndex].updatedAt = new Date()
+    
+    return { success: true, data: this.mockWorkProfiles[profileIndex] }
   }
 }
 

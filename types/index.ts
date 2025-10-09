@@ -172,3 +172,34 @@ export interface ApplicationCollection {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface WorkProfile {
+  id: string
+  username: string
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  homeAddress?: string
+  email: string
+  departmentId: string
+  departmentName?: string
+  status: "Active" | "Disabled"
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface WorkProfileFormData {
+  username: string
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  homeAddress?: string
+  email: string
+  departmentId: string
+}
+
+export interface WorkProfileSearchParams {
+  username?: string
+  departmentId?: string
+  status?: "Active" | "Disabled"
+}
