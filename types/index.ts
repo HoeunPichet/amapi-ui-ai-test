@@ -4,8 +4,20 @@ export interface User {
   email: string
   role: "admin" | "user" | "viewer"
   status: "active" | "inactive"
+  departmentId?: string
   avatar?: string
   lastLogin?: Date
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface Department {
+  id: string
+  name: string
+  description?: string
+  managerId?: string
+  userCount: number
+  status: "active" | "inactive"
   createdAt: Date
   updatedAt: Date
 }
@@ -133,4 +145,29 @@ export interface Activity {
   policyId?: string
   enterpriseId?: string
   timestamp: Date
+}
+
+export interface Application {
+  id: string
+  name: string
+  type: "Public App" | "Private App" | "Web App"
+  packageName: string
+  autoUpdateMode: "disabled" | "enabled" | "wifi_only"
+  description?: string
+  version?: string
+  iconUrl?: string
+  downloadUrl?: string
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface ApplicationCollection {
+  id: string
+  name: string
+  description?: string
+  applicationIds: string[]
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
 }

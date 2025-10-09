@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react"
 import { amapiService } from "@/services/amapi.service"
-import { User } from "@/types"
+import { User, Department } from "@/types"
 import { useToast } from "@/hooks/use-simple-toast"
 import { Button } from "@/ui/button"
 import { Input } from "@/ui/input"
-import { Users, Search, Edit, Trash2, Shield } from "lucide-react"
+import { Users, Search, Edit, Trash2, Shield, Building2 } from "lucide-react"
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([])
+  const [departments, setDepartments] = useState<Department[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const { toast } = useToast()
@@ -17,12 +18,22 @@ export default function UsersPage() {
   useEffect(() => {
     const load = async () => {
       setLoading(true)
-      const res = await amapiService.getUsers({ page: 1, limit: 20, search: searchTerm || undefined })
-      if (res.success && res.data) setUsers(res.data.data)
+      const [usersRes, departmentsRes] = await Promise.all([
+        amapiService.getUsers({ page: 1, limit: 20, search: searchTerm || undefined }),
+        amapiService.getDepartments({ page: 1, limit: 100 })
+      ])
+      if (usersRes.success && usersRes.data) setUsers(usersRes.data.data)
+      if (departmentsRes.success && departmentsRes.data) setDepartments(departmentsRes.data.data)
       setLoading(false)
     }
     load()
   }, [searchTerm])
+
+  const getDepartmentName = (departmentId?: string) => {
+    if (!departmentId) return "No Department"
+    const department = departments.find(d => d.id === departmentId)
+    return department?.name || "Unknown Department"
+  }
 
   return (
     <div className="space-y-6">
@@ -57,6 +68,7 @@ export default function UsersPage() {
                 <tr>
                   <th className="text-left p-4 font-medium text-secondary-900">User</th>
                   <th className="text-left p-4 font-medium text-secondary-900">Email</th>
+                  <th className="text-left p-4 font-medium text-secondary-900">Department</th>
                   <th className="text-left p-4 font-medium text-secondary-900">Role</th>
                   <th className="text-left p-4 font-medium text-secondary-900">Status</th>
                   <th className="text-left p-4 font-medium text-secondary-900">Actions</th>
@@ -74,6 +86,12 @@ export default function UsersPage() {
                       </div>
                     </td>
                     <td className="p-4 text-secondary-700">{u.email}</td>
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4 text-secondary-500" />
+                        <span className="text-secondary-700">{getDepartmentName(u.departmentId)}</span>
+                      </div>
+                    </td>
                     <td className="p-4">
                       <span className="text-xs px-2 py-1 rounded-full border bg-secondary-100 text-secondary-800 border-secondary-200 uppercase">{u.role}</span>
                     </td>

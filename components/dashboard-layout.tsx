@@ -12,6 +12,7 @@ import {
   Shield, 
   Key, 
   Building, 
+  Building2,
   Users,
   Menu,
   Search,
@@ -19,15 +20,21 @@ import {
   Plus,
   LogOut,
   X,
-  ActivityIcon
+  ActivityIcon,
+  Grid3X3,
+  FolderOpen
 } from "lucide-react"
 
 const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: Home, color: "text-blue-500" },
+  { name: "Home", href: "/home", icon: Home, color: "text-blue-500" },
+  { name: "Dashboard", href: "/dashboard", icon: ActivityIcon, color: "text-slate-500" },
   { name: "Devices", href: "/dashboard/devices", icon: Smartphone, color: "text-green-500" },
   { name: "Policies", href: "/dashboard/policies", icon: Shield, color: "text-purple-500" },
+  { name: "Applications", href: "/dashboard/applications", icon: Grid3X3, color: "text-emerald-500" },
+  { name: "Collections", href: "/dashboard/collections", icon: FolderOpen, color: "text-teal-500" },
   { name: "Tokens", href: "/dashboard/tokens", icon: Key, color: "text-orange-500" },
   { name: "Enterprises", href: "/dashboard/enterprises", icon: Building, color: "text-pink-500" },
+  { name: "Departments", href: "/dashboard/departments", icon: Building2, color: "text-indigo-500" },
   { name: "Users", href: "/dashboard/users", icon: Users, color: "text-cyan-500" },
 ]
 

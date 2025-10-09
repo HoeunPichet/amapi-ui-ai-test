@@ -30,7 +30,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!loading && isAuthenticated) {
-      router.push("/dashboard")
+      router.push("/home")
     }
   }, [isAuthenticated, loading, router])
 
@@ -77,7 +77,7 @@ export default function LoginPage() {
           description: "You have been successfully logged in.",
           variant: "success"
         })
-        router.push("/dashboard")
+        router.push("/home")
       } else {
         toast({
           title: "Login failed",
