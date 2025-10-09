@@ -57,7 +57,7 @@ export default function DepartmentsPage() {
           description: editingDepartment 
             ? "Department updated successfully" 
             : "Department created successfully",
-          type: "success"
+          variant: "success"
         })
         await loadDepartments()
       } else {
@@ -67,7 +67,7 @@ export default function DepartmentsPage() {
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to save department",
-        type: "error"
+        variant: "destructive"
       })
       throw error
     }
@@ -79,14 +79,14 @@ export default function DepartmentsPage() {
       toast({
         title: "Success",
         description: "Department deleted successfully",
-        type: "success"
+        variant: "success"
       })
       await loadDepartments()
     } else {
       toast({
         title: "Error",
         description: res.error || "Failed to delete department",
-        type: "error"
+        variant: "destructive"
       })
     }
   }
@@ -164,7 +164,7 @@ export default function DepartmentsPage() {
                     </td>
                     <td className="p-4">
                       <span className={`text-xs px-2 py-1 rounded-full border ${
-                        dept.status === 'active' 
+                        dept.status === 'Active' 
                           ? 'bg-green-100 text-green-800 border-green-200' 
                           : 'bg-secondary-100 text-secondary-800 border-secondary-200'
                       }`}>

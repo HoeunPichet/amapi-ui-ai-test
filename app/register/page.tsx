@@ -229,10 +229,10 @@ export default function RegisterPage() {
           {step === "form" ? (
             <form className="space-y-6">
               {/* Name Field */}
-              <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium text-secondary-700">
-                  Full Name
-                </label>
+            <div className="space-y-2">
+              <label htmlFor="name" className="text-sm font-medium text-secondary-700">
+                Full Name <span className="text-red-500">*</span>
+              </label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-400">
                     <UserIcon />
@@ -254,10 +254,10 @@ export default function RegisterPage() {
               </div>
 
               {/* Email Field */}
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-secondary-700">
-                  Email Address
-                </label>
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm font-medium text-secondary-700">
+                Email Address <span className="text-red-500">*</span>
+              </label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-400">
                     <MailIcon />
@@ -279,10 +279,10 @@ export default function RegisterPage() {
               </div>
 
               {/* Password Field */}
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-secondary-700">
-                  Password
-                </label>
+            <div className="space-y-2">
+              <label htmlFor="password" className="text-sm font-medium text-secondary-700">
+                Password <span className="text-red-500">*</span>
+              </label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-400">
                     <LockIcon />
@@ -316,10 +316,10 @@ export default function RegisterPage() {
               </div>
 
               {/* Confirm Password Field */}
-              <div className="space-y-2">
-                <label htmlFor="confirmPassword" className="text-sm font-medium text-secondary-700">
-                  Confirm Password
-                </label>
+            <div className="space-y-2">
+              <label htmlFor="confirmPassword" className="text-sm font-medium text-secondary-700">
+                Confirm Password <span className="text-red-500">*</span>
+              </label>
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-400">
                     <LockIcon />
@@ -390,7 +390,7 @@ export default function RegisterPage() {
               {/* OTP Input */}
               <div className="space-y-2">
                 <label htmlFor="otp" className="text-sm font-medium text-secondary-700">
-                  Verification Code
+                  Verification Code <span className="text-red-500">*</span>
                 </label>
                 <Input
                   id="otp"

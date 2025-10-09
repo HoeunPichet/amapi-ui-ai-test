@@ -14,8 +14,8 @@ interface AuthContextType {
   changePassword: (credentials: PasswordChangeCredentials) => Promise<boolean>
   logout: () => Promise<void>
   isAuthenticated: boolean
-  hasRole: (role: User["role"]) => boolean
-  hasAnyRole: (roles: User["role"][]) => boolean
+  hasPosition: (position: User["position"]) => boolean
+  hasAnyPosition: (positions: User["position"][]) => boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -128,12 +128,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const hasRole = (role: User["role"]): boolean => {
-    return authService.hasRole(role)
+  const hasPosition = (position: User["position"]): boolean => {
+    return authService.hasPosition(position)
   }
 
-  const hasAnyRole = (roles: User["role"][]): boolean => {
-    return authService.hasAnyRole(roles)
+  const hasAnyPosition = (positions: User["position"][]): boolean => {
+    return authService.hasAnyPosition(positions)
   }
 
   const value: AuthContextType = {
@@ -146,8 +146,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     changePassword,
     logout,
     isAuthenticated: !!user,
-    hasRole,
-    hasAnyRole,
+    hasPosition,
+    hasAnyPosition,
   }
 
   return (

@@ -26,7 +26,7 @@ export default function DepartmentModal({
     description: "",
     managerId: "",
     userCount: 0,
-    status: "active" as "active" | "inactive"
+    status: "Active" as "Active" | "Inactive"
   })
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -46,7 +46,7 @@ export default function DepartmentModal({
         description: "",
         managerId: "",
         userCount: 0,
-        status: "active"
+        status: "Active"
       })
     }
     setErrors({})
@@ -174,11 +174,11 @@ export default function DepartmentModal({
             </label>
             <select
               value={formData.status}
-              onChange={(e) => handleInputChange("status", e.target.value as "active" | "inactive")}
+              onChange={(e) => handleInputChange("status", e.target.value as "Active" | "Inactive")}
               className="flex h-10 w-full rounded-lg border border-primary-300 bg-white px-3 py-2 text-sm text-slate-800 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
             </select>
           </div>
 

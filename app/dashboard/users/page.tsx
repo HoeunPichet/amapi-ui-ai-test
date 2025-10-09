@@ -69,7 +69,7 @@ export default function UsersPage() {
                   <th className="text-left p-4 font-medium text-secondary-900">User</th>
                   <th className="text-left p-4 font-medium text-secondary-900">Email</th>
                   <th className="text-left p-4 font-medium text-secondary-900">Department</th>
-                  <th className="text-left p-4 font-medium text-secondary-900">Role</th>
+                  <th className="text-left p-4 font-medium text-secondary-900">Position</th>
                   <th className="text-left p-4 font-medium text-secondary-900">Status</th>
                   <th className="text-left p-4 font-medium text-secondary-900">Actions</th>
                 </tr>
@@ -93,10 +93,10 @@ export default function UsersPage() {
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="text-xs px-2 py-1 rounded-full border bg-secondary-100 text-secondary-800 border-secondary-200 uppercase">{u.role}</span>
+                      <span className="text-xs px-2 py-1 rounded-full border bg-secondary-100 text-secondary-800 border-secondary-200 uppercase">{u.position}</span>
                     </td>
                     <td className="p-4">
-                      <span className={`text-xs px-2 py-1 rounded-full border ${u.status === 'active' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-secondary-100 text-secondary-800 border-secondary-200'}`}>{u.status}</span>
+                      <span className={`text-xs px-2 py-1 rounded-full border ${u.status === 'Active' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-secondary-100 text-secondary-800 border-secondary-200'}`}>{u.status}</span>
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">

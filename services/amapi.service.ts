@@ -24,7 +24,7 @@ class AmapiService {
       name: "Samsung Galaxy S24",
       model: "SM-S921B",
       serialNumber: "R58M123ABC",
-      status: "active",
+      status: "Active",
       osVersion: "Android 14",
       lastSync: new Date("2024-01-15T10:30:00Z"),
       batteryLevel: 85,
@@ -40,7 +40,7 @@ class AmapiService {
       name: "Google Pixel 8 Pro",
       model: "G1MNW",
       serialNumber: "1A2B3C4D5E",
-      status: "inactive",
+      status: "Inactive",
       osVersion: "Android 14",
       lastSync: new Date("2024-01-10T15:45:00Z"),
       batteryLevel: 42,
@@ -81,7 +81,7 @@ class AmapiService {
       name: "TechCorp Inc",
       domain: "techcorp.com",
       adminEmail: "admin@techcorp.com",
-      status: "active",
+      status: "Active",
       deviceCount: 2,
       userCount: 5,
       subscription: "premium",
@@ -97,7 +97,7 @@ class AmapiService {
       description: "Software development and technical operations",
       managerId: "user-1",
       userCount: 15,
-      status: "active",
+      status: "Active",
       createdAt: new Date("2024-01-01T00:00:00Z"),
       updatedAt: new Date("2024-01-15T00:00:00Z")
     },
@@ -107,7 +107,7 @@ class AmapiService {
       description: "Marketing and communications team",
       managerId: "user-2",
       userCount: 8,
-      status: "active",
+      status: "Active",
       createdAt: new Date("2024-01-01T00:00:00Z"),
       updatedAt: new Date("2024-01-15T00:00:00Z")
     },
@@ -116,7 +116,7 @@ class AmapiService {
       name: "Human Resources",
       description: "HR and employee relations",
       userCount: 5,
-      status: "active",
+      status: "Active",
       createdAt: new Date("2024-01-01T00:00:00Z"),
       updatedAt: new Date("2024-01-15T00:00:00Z")
     }
@@ -127,8 +127,9 @@ class AmapiService {
       id: "user-1",
       name: "John Doe",
       email: "john@techcorp.com",
-      role: "user",
-      status: "active",
+      position: "Manager",
+      loginMethod: "email",
+      status: "Active",
       departmentId: "dept-1",
       lastLogin: new Date("2024-01-15T09:00:00Z"),
       createdAt: new Date("2024-01-01T00:00:00Z"),
@@ -138,12 +139,37 @@ class AmapiService {
       id: "user-2",
       name: "Jane Smith",
       email: "jane@techcorp.com",
-      role: "user",
-      status: "active",
+      position: "Employee",
+      loginMethod: "email",
+      status: "Active",
       departmentId: "dept-2",
       lastLogin: new Date("2024-01-14T16:30:00Z"),
       createdAt: new Date("2024-01-02T00:00:00Z"),
       updatedAt: new Date("2024-01-14T16:30:00Z")
+    },
+    {
+      id: "user-3",
+      name: "Mike Johnson",
+      email: "mike@techcorp.com",
+      position: "Administrator",
+      loginMethod: "email",
+      status: "Active",
+      departmentId: "dept-1",
+      lastLogin: new Date("2024-01-13T11:15:00Z"),
+      createdAt: new Date("2024-01-03T00:00:00Z"),
+      updatedAt: new Date("2024-01-13T11:15:00Z")
+    },
+    {
+      id: "user-4",
+      name: "Sarah Wilson",
+      email: "sarah@techcorp.com",
+      position: "Viewer",
+      loginMethod: "email",
+      status: "Active",
+      departmentId: "dept-3",
+      lastLogin: new Date("2024-01-12T14:45:00Z"),
+      createdAt: new Date("2024-01-04T00:00:00Z"),
+      updatedAt: new Date("2024-01-12T14:45:00Z")
     }
   ]
 
@@ -234,9 +260,9 @@ class AmapiService {
     
     const stats: DashboardStats = {
       totalDevices: this.mockDevices.length,
-      activeDevices: this.mockDevices.filter(d => d.status === "active").length,
+      activeDevices: this.mockDevices.filter(d => d.status === "Active").length,
       totalUsers: this.mockUsers.length,
-      activeUsers: this.mockUsers.filter(u => u.status === "active").length,
+      activeUsers: this.mockUsers.filter(u => u.status === "Active").length,
       totalPolicies: this.mockPolicies.length,
       activePolicies: this.mockPolicies.filter(p => p.isActive).length,
       totalEnterprises: this.mockEnterprises.length,

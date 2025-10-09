@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
+import { useToast } from "@/hooks/use-simple-toast"
 import { Button } from "@/ui/button"
 import { cn } from "@/lib/utils"
 import { 
@@ -30,32 +31,66 @@ import {
   ChevronDown
 } from "lucide-react"
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: ActivityIcon, color: "text-blue-600" },
-  { name: "Devices", href: "/dashboard/devices", icon: Smartphone, color: "text-green-600" },
-  { name: "Policies", href: "/dashboard/policies", icon: Shield, color: "text-purple-600" },
-  { name: "Applications", href: "/dashboard/applications", icon: Grid3X3, color: "text-emerald-600" },
-  { name: "Collections", href: "/dashboard/collections", icon: FolderOpen, color: "text-teal-600" },
-  { name: "Tokens", href: "/dashboard/tokens", icon: Key, color: "text-orange-600" },
-  { name: "Enterprises", href: "/dashboard/enterprises", icon: Building, color: "text-pink-600" },
-  { name: "Departments", href: "/dashboard/departments", icon: Building2, color: "text-indigo-600" },
-  { name: "Users", href: "/dashboard/users", icon: Users, color: "text-cyan-600" },
-]
+  const navigation = [
+    { name: "Dashboard", href: "/dashboard", icon: ActivityIcon, color: "text-blue-600" },
+    { name: "Devices", href: "/dashboard/devices", icon: Smartphone, color: "text-green-600" },
+    { name: "Policies", href: "/dashboard/policies", icon: Shield, color: "text-purple-600" },
+    { name: "Applications", href: "/dashboard/applications", icon: Grid3X3, color: "text-emerald-600" },
+    { name: "Collections", href: "/dashboard/collections", icon: FolderOpen, color: "text-teal-600" },
+    { name: "Tokens", href: "/dashboard/tokens", icon: Key, color: "text-orange-600" },
+    { name: "Departments", href: "/dashboard/departments", icon: Building2, color: "text-indigo-600" },
+    { name: "Users", href: "/dashboard/users", icon: Users, color: "text-cyan-600" },
+    { name: "Settings", href: "/dashboard/settings", icon: Settings, color: "text-pink-600" },
+  ]
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const { user, logout } = useAuth()
+  const { toast } = useToast()
+  
+  // Check if enterprise exists (skip check for create-enterprise page)
+  useEffect(() => {
+    if (pathname === "/dashboard/create-enterprise") return
+    
+    const existingEnterprise = localStorage.getItem("enterprise_data")
+    if (!existingEnterprise) {
+      router.push("/dashboard/create-enterprise")
+    }
+  }, [router, pathname])
+  
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
-  const pathname = usePathname()
-  const { user, logout } = useAuth()
   const profileDropdownRef = useRef<HTMLDivElement>(null)
 
   const handleLogout = async () => {
     await logout()
+  }
+
+  const handleNavigationClick = (href: string, e: React.MouseEvent) => {
+    // Check if enterprise exists
+    const existingEnterprise = localStorage.getItem("enterprise_data")
+    
+    // Allow navigation to dashboard and create-enterprise
+    if (href === "/dashboard" || href === "/dashboard/create-enterprise") {
+      return
+    }
+    
+    // Show alert for other modules if enterprise doesn't exist
+    if (!existingEnterprise) {
+      e.preventDefault()
+      toast({
+        title: "Enterprise Required",
+        description: "Please create your enterprise first before accessing other modules.",
+        variant: "destructive"
+      })
+      router.push("/dashboard/create-enterprise")
+    }
   }
 
   // Close dropdown when clicking outside
@@ -116,13 +151,16 @@ export default function DashboardLayout({
                   <Link
                     key={item.name}
                     href={item.href}
+                    onClick={(e) => {
+                      handleNavigationClick(item.href, e)
+                      setSidebarOpen(false)
+                    }}
                     className={cn(
                       "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
                       isActive
                         ? "bg-primary-500 text-white shadow-lg transform scale-[1.02]"
                         : "text-slate-600 hover:bg-primary-50 hover:text-primary-700 hover:shadow-md hover:transform hover:scale-[1.01]"
                     )}
-                    onClick={() => setSidebarOpen(false)}
                   >
                 <IconComponent 
                   className={cn(
@@ -175,9 +213,9 @@ export default function DashboardLayout({
               className="w-8 h-8 bg-white border border-primary-200 shadow-md hover:bg-primary-50 hover:text-primary-600 transition-colors"
             >
               {sidebarCollapsed ? (
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4 text-slate-500" />
               ) : (
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-4 h-4 text-slate-500" />
               )}
             </Button>
           </div>
@@ -192,6 +230,7 @@ export default function DashboardLayout({
                   <Link
                     key={item.name}
                     href={item.href}
+                    onClick={(e) => handleNavigationClick(item.href, e)}
                     className={cn(
                       "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
                       isActive
@@ -281,7 +320,7 @@ export default function DashboardLayout({
                   </div>
                   <div className="hidden md:block text-left">
                     <p className="text-sm font-medium text-slate-900">{user?.name}</p>
-                    <p className="text-xs text-slate-500 capitalize">{user?.role}</p>
+                    <p className="text-xs text-slate-500 capitalize">{user?.position}</p>
                   </div>
                   <ChevronDown className="w-4 h-4 text-slate-600" />
                 </button>

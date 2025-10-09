@@ -2,8 +2,8 @@ export interface User {
   id: string
   name: string
   email: string
-  role: "admin" | "user" | "viewer"
-  status: "active" | "inactive"
+  position: "Administrator" | "Manager" | "Employee" | "Viewer"
+  status: "Active" | "Inactive"
   loginMethod: "email" | "google"
   departmentId?: string
   avatar?: string
@@ -18,7 +18,7 @@ export interface Department {
   description?: string
   managerId?: string
   userCount: number
-  status: "active" | "inactive"
+  status: "Active" | "Inactive"
   createdAt: Date
   updatedAt: Date
 }
@@ -28,7 +28,7 @@ export interface Device {
   name: string
   model: string
   serialNumber: string
-  status: "active" | "inactive" | "pending"
+  status: "Active" | "Inactive" | "pending"
   osVersion: string
   lastSync?: Date
   batteryLevel?: number
@@ -82,7 +82,7 @@ export interface Enterprise {
   name: string
   domain: string
   adminEmail: string
-  status: "active" | "inactive" | "pending"
+  status: "Active" | "Inactive" | "pending"
   deviceCount: number
   userCount: number
   subscription: "basic" | "premium" | "enterprise"

@@ -80,7 +80,7 @@ export default function DeviceDetailPage() {
     name: "Samsung Galaxy S24",
     model: "SM-S921B",
     serialNumber: "R58M123ABC",
-    status: "active",
+    status: "Active",
     osVersion: "Android 14",
     lastSync: new Date("2024-01-15T10:30:00Z"),
     batteryLevel: 85,

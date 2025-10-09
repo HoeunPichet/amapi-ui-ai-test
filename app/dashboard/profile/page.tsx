@@ -230,7 +230,7 @@ export default function ProfilePage() {
           </div>
           <div>
             <p className="font-semibold text-slate-900">{user.name}</p>
-            <p className="text-sm text-slate-500">{user.role}</p>
+            <p className="text-sm text-slate-500">{user.position}</p>
           </div>
         </div>
       </div>
@@ -497,8 +497,8 @@ export default function ProfilePage() {
                   <Shield className="w-5 h-5 text-primary-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-900">Role</p>
-                  <p className="text-sm text-slate-500 capitalize">{user.role}</p>
+                  <p className="text-sm font-medium text-slate-900">Position</p>
+                  <p className="text-sm text-slate-500 capitalize">{user.position}</p>
                 </div>
               </div>
               

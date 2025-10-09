@@ -78,7 +78,7 @@ export default function DevicesPage() {
       name: "Samsung Galaxy S24",
       model: "SM-S921B",
       serialNumber: "R58M123ABC",
-      status: "active",
+      status: "Active",
       osVersion: "Android 14",
       lastSync: new Date("2024-01-15T10:30:00Z"),
       batteryLevel: 85,
@@ -110,7 +110,7 @@ export default function DevicesPage() {
       name: "Google Pixel 8 Pro",
       model: "G1MNW",
       serialNumber: "1A2B3C4D5E",
-      status: "inactive",
+      status: "Inactive",
       osVersion: "Android 14",
       lastSync: new Date("2024-01-10T15:45:00Z"),
       batteryLevel: 42,
@@ -204,9 +204,9 @@ export default function DevicesPage() {
 
   const getStatusColor = (status: Device["status"]) => {
     switch (status) {
-      case "active":
+      case "Active":
         return "bg-green-100 text-green-800 border-green-200"
-      case "inactive":
+      case "Inactive":
         return "bg-red-100 text-red-800 border-red-200"
       case "pending":
         return "bg-yellow-100 text-yellow-800 border-yellow-200"

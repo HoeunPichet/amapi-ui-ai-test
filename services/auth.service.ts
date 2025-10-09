@@ -75,8 +75,8 @@ class AuthService {
         id: "1",
         name: "Admin User",
         email: credentials.email,
-        role: "admin",
-        status: "active",
+        position: "Administrator",
+        status: "Active",
         loginMethod: "email",
         avatar: "/avatars/admin.png",
         lastLogin: new Date(),
@@ -116,8 +116,8 @@ class AuthService {
       id: "2",
       name: credentials.name,
       email: credentials.email,
-      role: "admin",
-      status: "active",
+      position: "Administrator",
+      status: "Active",
       loginMethod: "google",
       avatar: "/avatars/google-admin.png",
       lastLogin: new Date(),
@@ -154,8 +154,8 @@ class AuthService {
       id: Date.now().toString(), // Simple ID generation
       name: credentials.name,
       email: credentials.email,
-      role: "user", // Default role for new registrations
-      status: "active",
+      position: "Employee", // Default position for new registrations
+      status: "Active",
       loginMethod: "email",
       avatar: "/avatars/default.png",
       lastLogin: new Date(),
@@ -295,12 +295,12 @@ class AuthService {
     return this.currentUser !== null && this.token !== null
   }
 
-  hasRole(role: User["role"]): boolean {
-    return this.currentUser?.role === role
+  hasPosition(position: User["position"]): boolean {
+    return this.currentUser?.position === position
   }
 
-  hasAnyRole(roles: User["role"][]): boolean {
-    return this.currentUser ? roles.includes(this.currentUser.role) : false
+  hasAnyPosition(positions: User["position"][]): boolean {
+    return this.currentUser ? positions.includes(this.currentUser.position) : false
   }
 
   private generateToken(): string {
