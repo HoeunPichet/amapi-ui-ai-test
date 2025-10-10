@@ -16,6 +16,7 @@ interface AuthContextType {
   isAuthenticated: boolean
   hasPosition: (position: User["position"]) => boolean
   hasAnyPosition: (positions: User["position"][]) => boolean
+  setUser: (user: User | null) => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -25,10 +26,70 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Initialize auth state
+    // Initialize auth state - check both old auth service and new API token
     const currentUser = authService.getCurrentUser()
+    
+    // Also check for new API-based authentication
+    if (typeof window !== "undefined") {
+      const apiToken = localStorage.getItem("amapi_token")
+      const apiUser = localStorage.getItem("amapi_user")
+      
+      if (apiToken && apiUser) {
+        try {
+          const parsedUser = JSON.parse(apiUser)
+          // Map API user to local User type
+          const mappedUser = {
+            id: parsedUser.id,
+            name: parsedUser.name || parsedUser.username || parsedUser.email,
+            email: parsedUser.email,
+            position: "Employee" as const,
+            status: "Active" as const,
+            loginMethod: "email" as const,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          }
+          setUser(mappedUser)
+          setLoading(false)
+          return
+        } catch (error) {
+          console.error("Error parsing API user data:", error)
+        }
+      }
+    }
+    
     setUser(currentUser)
     setLoading(false)
+  }, [])
+
+  // Listen for localStorage changes to update auth state
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "amapi_user" && e.newValue) {
+        try {
+          const parsedUser = JSON.parse(e.newValue)
+          const mappedUser = {
+            id: parsedUser.id,
+            name: parsedUser.name || parsedUser.username || parsedUser.email,
+            email: parsedUser.email,
+            position: "Employee" as const,
+            status: "Active" as const,
+            loginMethod: "email" as const,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          }
+          setUser(mappedUser)
+        } catch (error) {
+          console.error("Error parsing user data from storage event:", error)
+        }
+      } else if (e.key === "amapi_user" && !e.newValue) {
+        setUser(null)
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    return () => window.removeEventListener("storage", handleStorageChange)
   }, [])
 
   const login = async (credentials: LoginCredentials): Promise<boolean> => {
@@ -119,7 +180,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async (): Promise<void> => {
     setLoading(true)
     try {
+      // Clear old auth service
       await authService.logout()
+      
+      // Clear new API-based authentication
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("amapi_token")
+        localStorage.removeItem("amapi_refresh_token")
+        localStorage.removeItem("amapi_token_expires")
+        localStorage.removeItem("amapi_user")
+      }
+      
       setUser(null)
     } catch (error) {
       console.error("Logout error:", error)
@@ -148,6 +219,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: !!user,
     hasPosition,
     hasAnyPosition,
+    setUser,
   }
 
   return (

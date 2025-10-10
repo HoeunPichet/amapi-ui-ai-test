@@ -341,8 +341,8 @@ export default function DashboardLayout({
                     </span>
                   </div>
                   <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium text-slate-900 truncate">{user?.name}</p>
-                    <p className="text-xs text-slate-500 capitalize truncate">{user?.position}</p>
+                    <p className="text-sm font-medium text-slate-900 uppercase truncate">{user?.name}</p>
+                    <p className="text-xs text-slate-500 capitalize truncate">Admin</p>
                   </div>
                   <ChevronDown className="w-4 h-4 text-slate-600 hidden sm:block" />
                 </button>

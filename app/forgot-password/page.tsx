@@ -1,132 +1,342 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Eye, EyeOff, Mail, Lock, Shield, AlertCircle, CheckCircle, Clock } from "lucide-react"
+import { forgotPasswordSchema, resetPasswordSchema, type ForgotPasswordForm, type ResetPasswordForm } from "@/lib/validations"
+import { forgotPassword, resetPassword } from "@/lib/api"
 import { Button } from "@/ui/button"
 import { Input } from "@/ui/input"
 import { useToast } from "@/hooks/use-simple-toast"
 
-// Simple icons without external dependencies
-const ShieldIcon = () => <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-const MailIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-const ArrowLeftIcon = () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("")
+  const [step, setStep] = useState<"forgot" | "reset">("forgot")
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [error, setError] = useState("")
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  const [userEmail, setUserEmail] = useState("")
+  
+  const router = useRouter()
   const { toast } = useToast()
 
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
+  const {
+    register: registerForgot,
+    handleSubmit: handleSubmitForgot,
+    formState: { errors: errorsForgot },
+    clearErrors: clearErrorsForgot,
+  } = useForm<ForgotPasswordForm>({
+    resolver: zodResolver(forgotPasswordSchema),
+  })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!email.trim()) {
-      setError("Email address is required")
-      return
-    }
+  const {
+    register: registerReset,
+    handleSubmit: handleSubmitReset,
+    formState: { errors: errorsReset },
+    clearErrors: clearErrorsReset,
+  } = useForm<ResetPasswordForm>({
+    resolver: zodResolver(resetPasswordSchema),
+  })
 
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email address")
-      return
-    }
-
+  const onSubmitForgot = async (data: ForgotPasswordForm) => {
     setIsLoading(true)
-    setError("")
+    setError(null)
+    clearErrorsForgot()
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      console.log("Forgot password request:", data)
+      const result = await forgotPassword(data)
+      console.log("Forgot password response:", result)
       
-      setIsSubmitted(true)
+      if (result.success) {
+        setUserEmail(data.email)
+        setStep("reset")
+        toast({
+          title: "Reset Code Sent!",
+          description: "A password reset code has been sent to your email.",
+          variant: "default",
+        })
+      }
+    } catch (err: any) {
+      console.error("Forgot password error:", err)
+      setError(err.message || "Failed to send reset code. Please try again.")
       toast({
-        title: "Reset link sent!",
-        description: "Check your email for password reset instructions.",
-        variant: "success"
-      })
-    } catch (error) {
-      setError("Failed to send reset email. Please try again.")
-      toast({
-        title: "Error",
-        description: "Failed to send reset email. Please try again.",
-        variant: "destructive"
+        title: "Reset Failed",
+        description: err.message || "Failed to send reset code. Please try again.",
+        variant: "destructive",
       })
     } finally {
       setIsLoading(false)
     }
   }
 
-  if (isSubmitted) {
+  const onSubmitReset = async (data: ResetPasswordForm) => {
+    setIsLoading(true)
+    setError(null)
+    clearErrorsReset()
+
+    try {
+      console.log("Reset password request:", {
+        email: userEmail,
+        otp: data.otp,
+        newPassword: data.newPassword,
+      })
+      
+      const result = await resetPassword({
+        email: userEmail,
+        otp: data.otp,
+        newPassword: data.newPassword,
+      })
+      
+      console.log("Reset password response:", result)
+      
+      if (result.success) {
+        setSuccess(true)
+      toast({
+          title: "Password Reset Successful!",
+          description: "Your password has been reset successfully.",
+          variant: "default",
+        })
+        
+        // Store token and redirect to dashboard
+        if (result.access_token) {
+          localStorage.setItem("amapi_token", result.access_token)
+        }
+        
+        // Store additional token information if available
+        if (result.refresh_token) {
+          localStorage.setItem("amapi_refresh_token", result.refresh_token)
+        }
+        if (result.expires_in) {
+          localStorage.setItem("amapi_token_expires", (Date.now() + result.expires_in * 1000).toString())
+        }
+        
+        // Create user object from available data since API doesn't return user info
+        const userData = {
+          id: "user_" + Date.now(), // Generate a temporary ID
+          email: userEmail,
+          name: userEmail.split('@')[0], // Use email prefix as name
+        }
+        
+        localStorage.setItem("amapi_user", JSON.stringify(userData))
+        
+        setTimeout(() => {
+          router.push("/dashboard")
+        }, 2000)
+      }
+    } catch (err: any) {
+      console.error("Reset password error:", err)
+      setError(err.message || "Password reset failed. Please try again.")
+      toast({
+        title: "Reset Failed",
+        description: err.message || "Password reset failed. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 p-4">
         <div className="w-full max-w-md">
           {/* Success State */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 rounded-2xl mb-4 shadow-lg">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+              <CheckCircle className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-secondary-900 mb-2">
-              Check Your Email
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">
+              Password Reset!
             </h1>
-            <p className="text-secondary-600">
-              We've sent password reset instructions to
+            <p className="text-slate-600">
+              Your password has been successfully reset.
             </p>
-            <p className="text-primary-600 font-medium">{email}</p>
           </div>
 
-          {/* Success Card */}
-          <div className="bg-white rounded-2xl shadow-xl border border-secondary-200 p-8 text-center">
-            <div className="mb-6">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MailIcon />
-              </div>
-              <h2 className="text-xl font-semibold text-secondary-900 mb-2">
-                Email Sent Successfully
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 text-center">
+            <div className="space-y-4">
+              <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
+              <h2 className="text-xl font-semibold text-slate-900">
+                Welcome back!
               </h2>
-              <p className="text-secondary-600 text-sm">
-                Please check your email inbox and follow the instructions to reset your password. 
-                The link will expire in 24 hours.
+              <p className="text-slate-600">
+                Redirecting you to the dashboard...
               </p>
             </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
-            <div className="space-y-4">
-              <Button
-                onClick={() => {
-                  setIsSubmitted(false)
-                  setEmail("")
-                }}
-                className="w-full h-12 text-base font-semibold"
-              >
-                Send Another Email
-              </Button>
-              
-              <Link href="/login">
-                <Button
-                  variant="outline"
-                  className="w-full h-12 text-base font-semibold"
-                >
-                  <ArrowLeftIcon />
-                  Back to Login
-                </Button>
-              </Link>
+  if (step === "reset") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 p-4">
+        <div className="w-full max-w-md">
+          {/* Reset Password Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-500 rounded-2xl mb-4 shadow-lg">
+              <Lock className="w-8 h-8 text-white" />
             </div>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">
+              Reset Your Password
+            </h1>
+            <p className="text-slate-600">
+              Enter the verification code and your new password
+            </p>
           </div>
 
-          {/* Footer */}
-          <div className="text-center mt-8">
-            <Link 
-              href="/" 
-              className="text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors"
-            >
-              ← Back to Home
-            </Link>
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
+            <form onSubmit={handleSubmitReset(onSubmitReset)} className="space-y-6">
+              {/* Email Display (read-only) */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700">
+                  Email Address
+                </label>
+                <div className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-600">
+                  {userEmail}
+                </div>
+              </div>
+
+              {/* OTP Field */}
+              <div className="space-y-2">
+                <label htmlFor="otp" className="text-sm font-medium text-slate-700">
+                  Verification Code
+                </label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                  <Input
+                    id="otp"
+                    type="text"
+                    placeholder="Enter 6-digit code"
+                    {...registerReset("otp")}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '').slice(0, 6)
+                      e.target.value = value
+                      registerReset("otp").onChange(e)
+                    }}
+                    className={`pl-10 ${errorsReset.otp ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                    maxLength={6}
+                  />
+                </div>
+                {errorsReset.otp && (
+                  <div className="flex items-center gap-2 text-sm text-red-600">
+                    <AlertCircle className="w-4 h-4" />
+                    {errorsReset.otp.message}
+                  </div>
+                )}
+              </div>
+
+              {/* New Password Field */}
+              <div className="space-y-2">
+                <label htmlFor="newPassword" className="text-sm font-medium text-slate-700">
+                  New Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                  <Input
+                    id="newPassword"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your new password"
+                    {...registerReset("newPassword")}
+                    className={`pl-10 pr-10 ${errorsReset.newPassword ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+                {errorsReset.newPassword && (
+                  <div className="flex items-center gap-2 text-sm text-red-600">
+                    <AlertCircle className="w-4 h-4" />
+                    {errorsReset.newPassword.message}
+                  </div>
+                )}
+              </div>
+
+              {/* Confirm Password Field */}
+              <div className="space-y-2">
+                <label htmlFor="confirmPassword" className="text-sm font-medium text-slate-700">
+                  Confirm New Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm your new password"
+                    {...registerReset("confirmPassword")}
+                    className={`pl-10 pr-10 ${errorsReset.confirmPassword ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+                {errorsReset.confirmPassword && (
+                  <div className="flex items-center gap-2 text-sm text-red-600">
+                    <AlertCircle className="w-4 h-4" />
+                    {errorsReset.confirmPassword.message}
+                  </div>
+                )}
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 text-sm text-red-600">
+                    <AlertCircle className="w-4 h-4" />
+                    {error}
+                  </div>
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Resetting...
+                  </div>
+                ) : (
+                  "Reset Password"
+                )}
+              </Button>
+              
+              {/* Back to Forgot Password */}
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => setStep("forgot")}
+                  className="text-sm text-slate-600 hover:text-slate-800 underline"
+                >
+                  ← Back to forgot password
+                </button>
+            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -134,98 +344,96 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 p-4">
       <div className="w-full max-w-md">
         {/* Logo and Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-500 rounded-2xl mb-4 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-              <ShieldIcon />
+              <Shield className="w-8 h-8 text-white" />
             </div>
           </Link>
-          <h1 className="text-3xl font-bold text-secondary-900 mb-2">
-            Forgot Password?
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+            Forgot Password
           </h1>
-          <p className="text-secondary-600">
-            No worries! Enter your email and we'll send you reset instructions.
+          <p className="text-slate-600">
+            Enter your email to receive a reset code
           </p>
         </div>
 
-        {/* Reset Form */}
-        <div className="bg-white rounded-2xl shadow-xl border border-secondary-200 p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Forgot Password Form */}
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
+          <form onSubmit={handleSubmitForgot(onSubmitForgot)} className="space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-secondary-700">
-                Email Address <span className="text-red-500">*</span>
+              <label htmlFor="email" className="text-sm font-medium text-slate-700">
+                Email Address
               </label>
               <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-400">
-                  <MailIcon />
-                </div>
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                 <Input
                   id="email"
-                  name="email"
                   type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value)
-                    setError("")
-                  }}
-                  className={`pl-10 bg-white ${error ? 'border-red-500 focus:border-red-500' : ''}`}
-                  disabled={isLoading}
+                  placeholder="Enter your email"
+                  {...registerForgot("email")}
+                  className={`pl-10 ${errorsForgot.email ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
                 />
               </div>
-              {error && (
-                <p className="text-sm text-red-600">{error}</p>
+              {errorsForgot.email && (
+                <div className="flex items-center gap-2 text-sm text-red-600">
+                  <AlertCircle className="w-4 h-4" />
+                  {errorsForgot.email.message}
+                </div>
               )}
             </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-sm text-red-600">
+                  <AlertCircle className="w-4 h-4" />
+                  {error}
+                </div>
+              </div>
+            )}
 
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full h-12 text-base font-semibold"
+              className="w-full"
               disabled={isLoading}
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  Sending Reset Link...
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Sending...
                 </div>
               ) : (
-                "Send Reset Link"
+                "Send Reset Code"
               )}
             </Button>
-          </form>
 
-          {/* Help Text */}
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="flex items-start gap-3">
-              <div className="w-5 h-5 text-blue-600 mt-0.5">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            {/* Links */}
+            <div className="text-center space-y-2">
+              <div className="text-sm text-slate-600">
+                Remember your password?{" "}
+                <Link 
+                  href="/login" 
+                  className="text-primary-600 hover:text-primary-700 underline font-medium"
+                >
+                  Sign in
+                </Link>
               </div>
-              <div className="text-sm text-blue-800">
-                <p className="font-medium mb-1">Need help?</p>
-                <p>If you don't receive an email within a few minutes, check your spam folder or contact support.</p>
+              <div>
+                <Link 
+                  href="/register" 
+                  className="text-sm text-slate-600 hover:text-slate-800 underline"
+                >
+                  Don't have an account? Register
+                </Link>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-8 space-y-2">
-          <Link 
-            href="/login" 
-            className="text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors"
-          >
-            ← Back to Login
-          </Link>
-          <p className="text-sm text-secondary-500">
-            © 2024 AMAPI Dashboard. All rights reserved.
-          </p>
+          </form>
         </div>
       </div>
     </div>
