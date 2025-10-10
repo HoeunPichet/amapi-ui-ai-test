@@ -1,4 +1,5 @@
-const BASE_URL = "https://auth.amapi.site";
+// Use relative URLs that will be rewritten by Next.js to auth.amapi.site
+const BASE_URL = "";
 
 export interface LoginRequest {
   email: string;
@@ -66,7 +67,7 @@ class ApiError extends Error {
 
 export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
   try {
-    const res = await fetch(`${BASE_URL}/api/v1/auth/login`, {
+    const res = await fetch(`/api/v1/auth/login`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -129,7 +130,7 @@ export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
 
 export async function registerUser(data: RegisterRequest): Promise<AuthResponse> {
   try {
-    const res = await fetch(`${BASE_URL}/api/v1/auth/signup`, {
+    const res = await fetch(`/api/v1/auth/signup`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -192,7 +193,7 @@ export async function registerUser(data: RegisterRequest): Promise<AuthResponse>
 
 export async function refreshToken(token: string): Promise<AuthResponse> {
   try {
-    const res = await fetch(`${BASE_URL}/api/v1/auth/refresh`, {
+    const res = await fetch(`/api/v1/auth/refresh`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -239,7 +240,7 @@ export async function refreshToken(token: string): Promise<AuthResponse> {
 
 export async function verifyOtp(data: VerifyOtpRequest): Promise<AuthResponse> {
   try {
-    const res = await fetch(`${BASE_URL}/api/v1/auth/verify-otp`, {
+    const res = await fetch(`/api/v1/auth/verify-otp`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -304,7 +305,7 @@ export async function verifyOtp(data: VerifyOtpRequest): Promise<AuthResponse> {
 
 export async function resendOtp(data: ResendOtpRequest): Promise<{ success: boolean; message?: string }> {
   try {
-    const res = await fetch(`${BASE_URL}/api/v1/auth/resend-otp`, {
+    const res = await fetch(`/api/v1/auth/resend-otp`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -359,7 +360,7 @@ export async function forgotPassword(data: ForgotPasswordRequest): Promise<{ suc
   try {
     console.log("API forgotPassword request:", data)
     
-    const res = await fetch(`${BASE_URL}/api/v1/auth/forget-password`, {
+    const res = await fetch(`/api/v1/auth/forget-password`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -416,7 +417,7 @@ export async function resetPassword(data: ResetPasswordRequest): Promise<AuthRes
   try {
     console.log("API resetPassword request:", data)
     
-    const res = await fetch(`${BASE_URL}/api/v1/auth/reset-password`, {
+    const res = await fetch(`/api/v1/auth/reset-password`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
