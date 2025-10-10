@@ -90,18 +90,6 @@ export interface Enterprise {
   updatedAt: Date
 }
 
-export interface Token {
-  id: string
-  name: string
-  token: string
-  type: "api" | "service"
-  permissions: string[]
-  isActive: boolean
-  expiresAt?: Date
-  lastUsed?: Date
-  createdAt: Date
-  updatedAt: Date
-}
 
 export interface ApiResponse<T = any> {
   success: boolean

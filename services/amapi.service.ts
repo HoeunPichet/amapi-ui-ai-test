@@ -4,7 +4,6 @@ import {
   Enterprise, 
   User, 
   Department,
-  Token, 
   DashboardStats, 
   Activity,
   Application,
@@ -176,19 +175,6 @@ class AmapiService {
     }
   ]
 
-  private mockTokens: Token[] = [
-    {
-      id: "token-1",
-      name: "API Access Token",
-      token: "amapi_sk_1234567890abcdef",
-      type: "api",
-      permissions: ["read:devices", "write:devices", "read:policies"],
-      isActive: true,
-      lastUsed: new Date("2024-01-15T08:00:00Z"),
-      createdAt: new Date("2024-01-01T00:00:00Z"),
-      updatedAt: new Date("2024-01-15T08:00:00Z")
-    }
-  ]
 
   private mockApplications: Application[] = [
     {
@@ -604,35 +590,6 @@ class AmapiService {
     return { success: true }
   }
 
-  // Tokens
-  async getTokens(params?: PaginationParams): Promise<ApiResponse<PaginatedResponse<Token>>> {
-    await this.delay()
-    
-    let tokens = [...this.mockTokens]
-    
-    if (params?.search) {
-      tokens = tokens.filter(t => 
-        t.name.toLowerCase().includes(params.search!.toLowerCase())
-      )
-    }
-
-    const total = tokens.length
-    const page = params?.page || 1
-    const limit = params?.limit || 10
-    const startIndex = (page - 1) * limit
-    const endIndex = startIndex + limit
-
-    return {
-      success: true,
-      data: {
-        data: tokens.slice(startIndex, endIndex),
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit)
-      }
-    }
-  }
 
   // Applications
   async getApplications(params?: PaginationParams): Promise<ApiResponse<PaginatedResponse<Application>>> {

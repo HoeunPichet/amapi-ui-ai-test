@@ -253,7 +253,7 @@ export default function PoliciesPage() {
           <h1 className="text-3xl font-bold text-secondary-900">Policies</h1>
           <p className="text-secondary-600 mt-1">Create and manage device policies</p>
         </div>
-        <Link href="/dashboard/policies/new">
+        <Link href="/dashboard/policy/new">
           <Button>
             <Plus className="w-4 h-4 mr-2" /> New Policy
           </Button>
@@ -288,7 +288,7 @@ export default function PoliciesPage() {
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-4">
-                <Link href={`/dashboard/policies/${policy.id}`}>
+                <Link href={`/dashboard/policy/${policy.id}`}>
                   <Button variant="outline" size="sm">
                     <Edit className="w-4 h-4 mr-2" /> Edit
                   </Button>

@@ -313,7 +313,7 @@ export default function DevicesPage() {
                     </div>
                     <div>
                       <button
-                        onClick={() => window.open(`/dashboard/devices/${device.id}`, '_blank')}
+                        onClick={() => window.open(`/dashboard/device/${device.id}`, '_blank')}
                         className="text-lg font-semibold text-slate-900 hover:text-primary-600 transition-colors text-left"
                       >
                         {device.name}
@@ -358,7 +358,7 @@ export default function DevicesPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => window.open(`/dashboard/devices/${device.id}`, '_blank')}
+                      onClick={() => window.open(`/dashboard/device/${device.id}`, '_blank')}
                       className="hover:bg-primary-50 hover:text-primary-600"
                     >
                       <Eye className="w-4 h-4" />

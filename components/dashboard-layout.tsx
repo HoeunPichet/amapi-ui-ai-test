@@ -11,7 +11,6 @@ import {
   Home, 
   Smartphone, 
   Shield, 
-  Key, 
   Building, 
   Building2,
   Users,
@@ -24,7 +23,6 @@ import {
   X,
   ActivityIcon,
   Grid3X3,
-  FolderOpen,
   ChevronLeft,
   ChevronRight,
   Settings,
@@ -33,14 +31,12 @@ import {
 
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: ActivityIcon, color: "text-blue-600" },
-    { name: "Devices", href: "/dashboard/devices", icon: Smartphone, color: "text-green-600" },
-    { name: "Policies", href: "/dashboard/policies", icon: Shield, color: "text-purple-600" },
-    { name: "Applications", href: "/dashboard/applications", icon: Grid3X3, color: "text-emerald-600" },
-    { name: "Collections", href: "/dashboard/collections", icon: FolderOpen, color: "text-teal-600" },
-    { name: "Tokens", href: "/dashboard/tokens", icon: Key, color: "text-orange-600" },
-    { name: "Departments", href: "/dashboard/departments", icon: Building2, color: "text-indigo-600" },
-    { name: "Work Profiles", href: "/dashboard/work-profiles", icon: Users, color: "text-cyan-600" },
-    { name: "Settings", href: "/dashboard/settings", icon: Settings, color: "text-pink-600" },
+    { name: "Device", href: "/dashboard/device", icon: Smartphone, color: "text-green-600" },
+    { name: "Policy", href: "/dashboard/policy", icon: Shield, color: "text-purple-600" },
+    { name: "Application", href: "/dashboard/application", icon: Grid3X3, color: "text-emerald-600" },
+    { name: "Department", href: "/dashboard/department", icon: Building2, color: "text-indigo-600" },
+    { name: "Work Profile", href: "/dashboard/work-profile", icon: Users, color: "text-cyan-600" },
+    { name: "Setting", href: "/dashboard/setting", icon: Settings, color: "text-pink-600" },
   ]
 
 export default function DashboardLayout({

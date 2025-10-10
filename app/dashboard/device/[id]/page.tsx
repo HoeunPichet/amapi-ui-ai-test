@@ -143,7 +143,7 @@ export default function DeviceDetailPage() {
         description: "The device has been successfully deleted.",
         variant: "success"
       })
-      router.push("/dashboard/devices")
+      router.push("/dashboard/device")
     } catch (error) {
       toast({
         title: "Error",
@@ -212,7 +212,7 @@ export default function DeviceDetailPage() {
         <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
         <h2 className="text-xl font-semibold text-slate-900 mb-2">Device not found</h2>
         <p className="text-slate-600 mb-4">The device you're looking for doesn't exist.</p>
-        <Button onClick={() => router.push("/dashboard/devices")}>
+        <Button onClick={() => router.push("/dashboard/device")}>
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Devices
         </Button>
@@ -227,7 +227,7 @@ export default function DeviceDetailPage() {
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
-            onClick={() => router.push("/dashboard/devices")}
+            onClick={() => router.push("/dashboard/device")}
             className="hover:bg-primary-50 hover:text-primary-600"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
