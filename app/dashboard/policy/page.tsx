@@ -250,7 +250,10 @@ export default function PoliciesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-secondary-900">Policies</h1>
+          <h1 className="text-3xl font-bold text-secondary-900 flex items-center gap-3">
+            <Shield className="w-8 h-8 text-primary-600" />
+            Policy
+          </h1>
           <p className="text-secondary-600 mt-1">Create and manage device policies</p>
         </div>
         <Link href="/dashboard/policy/new">

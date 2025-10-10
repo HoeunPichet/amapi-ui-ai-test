@@ -241,7 +241,8 @@ export default function DevicesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent flex items-center gap-3">
+            <Smartphone className="w-8 h-8 text-primary-600" />
             Device Management
           </h1>
           <p className="text-slate-600 mt-1">

@@ -177,7 +177,10 @@ export default function WorkProfilesPage() {
             <Users className="w-6 h-6 text-primary-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Work Profiles</h1>
+            <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+              <Users className="w-7 h-7 text-primary-600" />
+              Work Profile
+            </h1>
             <p className="text-slate-600">Manage employee work profiles and information</p>
           </div>
         </div>

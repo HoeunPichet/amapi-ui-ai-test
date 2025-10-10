@@ -37,7 +37,7 @@ export function Pagination({
             size="sm"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage <= 1 || isLoading}
-            className="text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+            className="text-slate-600 hover:bg-primary-50 hover:text-primary-700"
           >
             <ChevronLeft className="w-4 h-4" />
             Previous
@@ -80,7 +80,7 @@ export function Pagination({
             size="sm"
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage >= totalPages || isLoading}
-            className="text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+            className="text-slate-600 hover:bg-primary-50 hover:text-primary-700"
           >
             Next
             <ChevronRight className="w-4 h-4" />

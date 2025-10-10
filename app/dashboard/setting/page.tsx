@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth"
 import { useToast } from "@/hooks/use-simple-toast"
 import { Button } from "@/ui/button"
 import { Input } from "@/ui/input"
+import { Settings } from "lucide-react"
 
 // Simple icons without external dependencies
 const BuildingIcon = () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
@@ -283,7 +284,10 @@ export default function SettingsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
+          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+            <Settings className="w-8 h-8 text-primary-600" />
+            Settings
+          </h1>
           <p className="text-slate-600 mt-1">Manage your enterprise configuration and preferences</p>
         </div>
       </div>

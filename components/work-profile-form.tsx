@@ -152,7 +152,7 @@ export function WorkProfileForm({
           variant="ghost"
           size="icon"
           onClick={onCancel}
-          className="hover:bg-slate-100"
+          className="hover:bg-primary-50"
         >
           <X className="w-5 h-5" />
         </Button>
@@ -260,7 +260,7 @@ export function WorkProfileForm({
             variant="ghost"
             onClick={onCancel}
             disabled={isLoading}
-            className="text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+            className="text-slate-600 hover:bg-primary-50 hover:text-primary-700"
           >
             Cancel
           </Button>

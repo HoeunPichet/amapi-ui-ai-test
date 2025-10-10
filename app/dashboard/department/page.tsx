@@ -128,7 +128,10 @@ export default function DepartmentsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-secondary-900">Departments</h1>
+          <h1 className="text-3xl font-bold text-secondary-900 flex items-center gap-3">
+            <Building2 className="w-8 h-8 text-primary-600" />
+            Department
+          </h1>
           <p className="text-secondary-600 mt-1">Manage organizational departments</p>
         </div>
         <Button onClick={handleAdd}>

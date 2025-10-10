@@ -173,11 +173,11 @@ export default function WorkProfilesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-            <Users className="w-6 h-6 text-primary-600" />
-          </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Work Profiles</h1>
+            <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
+              <Users className="w-8 h-8 text-primary-600" />
+              Work Profile
+            </h1>
             <p className="text-slate-600">Manage employee work profiles and information</p>
           </div>
         </div>

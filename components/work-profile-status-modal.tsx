@@ -62,7 +62,7 @@ export function WorkProfileStatusModal({
         <div className="relative p-6 pb-4">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 transition-colors group"
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-primary-50 transition-colors group"
           >
             <X className="w-5 h-5 text-slate-500 group-hover:text-slate-700" />
           </button>
@@ -159,7 +159,7 @@ export function WorkProfileStatusModal({
               variant="ghost"
               onClick={onClose}
               disabled={isLoading || isAnimating}
-              className="flex-1 text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+              className="flex-1 text-slate-600 hover:bg-primary-50 hover:text-primary-700"
             >
               Nevermind
             </Button>

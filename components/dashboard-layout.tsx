@@ -114,14 +114,14 @@ export default function DashboardLayout({
           className="fixed inset-0 bg-black/60 backdrop-blur-sm" 
           onClick={() => setSidebarOpen(false)} 
         />
-        <div className="fixed inset-y-0 left-0 w-72 bg-white/95 backdrop-blur-xl shadow-2xl border-r border-white/20 flex flex-col">
-          <div className="flex items-center justify-between p-6 border-b border-primary-200 flex-shrink-0">
+        <div className="fixed inset-y-0 left-0 w-80 bg-white shadow-2xl border-r border-slate-200 flex flex-col">
+          <div className="flex items-center justify-between p-4 border-b border-slate-200 flex-shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg">
                 <Shield className="w-5 h-5 text-white" />
               </div>
               <div>
-                <span className="font-bold text-xl text-primary-600">
+                <span className="font-bold text-lg text-primary-600">
                   AMAPI
                 </span>
                 <p className="text-xs text-slate-500">Management Hub</p>
@@ -131,15 +131,27 @@ export default function DashboardLayout({
               variant="ghost"
               size="icon"
               onClick={() => setSidebarOpen(false)}
-              className="hover:bg-red-50 hover:text-red-500 transition-colors"
+              className="hover:bg-red-50 hover:text-red-500 transition-colors p-2"
             >
               <X className="w-5 h-5" />
             </Button>
           </div>
           
+          {/* Mobile Search */}
+          <div className="p-4 border-b border-slate-200">
+            <div className="flex items-center gap-3 bg-slate-50 rounded-lg px-3 py-2">
+              <Search className="w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="bg-transparent border-none outline-none text-sm text-slate-800 placeholder-slate-500 flex-1"
+              />
+            </div>
+          </div>
+          
           {/* Scrollable navigation */}
           <div className="flex-1 overflow-y-auto">
-            <nav className="p-4 space-y-2">
+            <nav className="p-3 space-y-1">
               {navigation.map((item) => {
                 const isActive = pathname === item.href
                 const IconComponent = item.icon
@@ -152,18 +164,18 @@ export default function DashboardLayout({
                       setSidebarOpen(false)
                     }}
                     className={cn(
-                      "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
+                      "group flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 min-h-[44px]",
                       isActive
-                        ? "bg-primary-500 text-white shadow-lg transform scale-[1.02]"
-                        : "text-slate-600 hover:bg-primary-50 hover:text-primary-700 hover:shadow-md hover:transform hover:scale-[1.01]"
+                        ? "bg-primary-500 text-white shadow-md"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                     )}
                   >
-                <IconComponent 
-                  className={cn(
-                    "w-5 h-5 transition-colors flex-shrink-0",
-                    isActive ? "text-white" : item.color
-                  )} 
-                />
+                    <IconComponent 
+                      className={cn(
+                        "w-5 h-5 transition-colors flex-shrink-0",
+                        isActive ? "text-white" : item.color
+                      )} 
+                    />
                     <span className="font-medium">{item.name}</span>
                     {isActive && (
                       <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse" />
@@ -174,6 +186,20 @@ export default function DashboardLayout({
             </nav>
           </div>
           
+          {/* Mobile User Profile */}
+          <div className="p-4 border-t border-slate-200">
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50">
+              <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center shadow-md">
+                <span className="text-sm font-bold text-white">
+                  {user?.name?.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-slate-900 truncate">{user?.name}</p>
+                <p className="text-xs text-slate-500 truncate">{user?.position}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -266,19 +292,19 @@ export default function DashboardLayout({
       )}>
         {/* Top bar */}
         <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-sm">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                className="lg:hidden hover:bg-primary-50 hover:text-primary-600 transition-colors p-2"
                 onClick={() => setSidebarOpen(true)}
               >
                 <Menu className="w-5 h-5" />
               </Button>
               
               {/* Search */}
-              <div className="hidden md:flex items-center gap-3 bg-white rounded-2xl px-4 py-2 min-w-96 border border-primary-200 shadow-sm">
+              <div className="hidden sm:flex items-center gap-3 bg-white rounded-2xl px-4 py-2 min-w-64 sm:min-w-96 border border-primary-200 shadow-sm">
                 <Search className="w-4 h-4 text-primary-400" />
                 <input
                   type="text"
@@ -291,14 +317,14 @@ export default function DashboardLayout({
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* Quick Actions */}
-              <Button variant="ghost" size="icon" className="hover:bg-primary-50 hover:text-primary-600 transition-colors">
+              <Button variant="ghost" size="icon" className="hidden sm:flex hover:bg-primary-50 hover:text-primary-600 transition-colors p-2">
                 <Plus className="w-5 h-5 text-slate-600" />
               </Button>
               
               {/* Notifications */}
-              <Button variant="ghost" size="icon" className="relative hover:bg-primary-50 hover:text-primary-600 transition-colors">
+              <Button variant="ghost" size="icon" className="relative hover:bg-primary-50 hover:text-primary-600 transition-colors p-2">
                 <Bell className="w-5 h-5 text-slate-600" />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-primary-500 rounded-full animate-pulse"></span>
               </Button>
@@ -307,18 +333,18 @@ export default function DashboardLayout({
               <div className="relative" ref={profileDropdownRef}>
                 <button
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors"
+                  className="flex items-center gap-2 sm:gap-3 p-2 rounded-lg hover:bg-primary-50 transition-colors min-h-[44px]"
                 >
                   <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center shadow-md">
                     <span className="text-sm font-bold text-white">
                       {user?.name?.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <div className="hidden md:block text-left">
-                    <p className="text-sm font-medium text-slate-900">{user?.name}</p>
-                    <p className="text-xs text-slate-500 capitalize">{user?.position}</p>
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-medium text-slate-900 truncate">{user?.name}</p>
+                    <p className="text-xs text-slate-500 capitalize truncate">{user?.position}</p>
                   </div>
-                  <ChevronDown className="w-4 h-4 text-slate-600" />
+                  <ChevronDown className="w-4 h-4 text-slate-600 hidden sm:block" />
                 </button>
 
                 {/* Profile Dropdown */}
@@ -332,7 +358,7 @@ export default function DashboardLayout({
                     <div className="py-2">
                       <Link
                         href="/dashboard/profile"
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors min-h-[44px]"
                         onClick={() => setProfileDropdownOpen(false)}
                       >
                         <User className="w-4 h-4" />
@@ -341,7 +367,7 @@ export default function DashboardLayout({
                       
                       <Link
                         href="/dashboard/profile"
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors min-h-[44px]"
                         onClick={() => setProfileDropdownOpen(false)}
                       >
                         <Settings className="w-4 h-4" />
@@ -355,7 +381,7 @@ export default function DashboardLayout({
                           setProfileDropdownOpen(false)
                           handleLogout()
                         }}
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full min-h-[44px]"
                       >
                         <LogOut className="w-4 h-4" />
                         Sign out
@@ -369,7 +395,7 @@ export default function DashboardLayout({
         </div>
 
         {/* Page content */}
-        <main className="p-6 lg:p-8">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>

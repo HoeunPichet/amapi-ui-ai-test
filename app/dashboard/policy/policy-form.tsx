@@ -148,7 +148,10 @@ export default function PoliciesForm({ mode, policyId }: { mode: Mode; policyId?
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-secondary-900">{mode === "edit" ? "Edit Policy" : "Create Policy"}</h1>
+          <h1 className="text-3xl font-bold text-secondary-900 flex items-center gap-3">
+            <Shield className="w-8 h-8 text-primary-600" />
+            {mode === "edit" ? "Edit Policy" : "Create Policy"}
+          </h1>
           <p className="text-secondary-600 mt-1">Define device policy configuration</p>
         </div>
         <div className="flex items-center gap-3">

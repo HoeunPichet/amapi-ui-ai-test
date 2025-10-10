@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth"
 import { useToast } from "@/hooks/use-simple-toast"
 import { Button } from "@/ui/button"
 import { Input } from "@/ui/input"
+import { Building2 } from "lucide-react"
 
 // Simple icons without external dependencies
 const BuildingIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
@@ -118,7 +119,8 @@ export default function CreateEnterprisePage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-500 rounded-2xl mb-4 shadow-lg">
             <ShieldIcon />
           </div>
-          <h1 className="text-3xl font-bold text-secondary-900 mb-2">
+          <h1 className="text-3xl font-bold text-secondary-900 mb-2 flex items-center justify-center gap-3">
+            <Building2 className="w-8 h-8 text-primary-600" />
             Create Your Enterprise
           </h1>
           <p className="text-secondary-600">

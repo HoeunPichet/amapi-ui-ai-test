@@ -222,7 +222,10 @@ export default function CollectionsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Application Collections</h1>
+          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+            <FolderOpen className="w-8 h-8 text-primary-600" />
+            Application Collection
+          </h1>
           <p className="text-slate-600 mt-1">Organize applications into collections for easy management</p>
         </div>
         <div className="flex gap-3">

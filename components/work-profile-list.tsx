@@ -152,7 +152,7 @@ export function WorkProfileList({
           <Button
             variant="ghost"
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+            className="flex items-center gap-2 text-slate-600 hover:bg-primary-50 hover:text-primary-700"
           >
             <Filter className="w-4 h-4" />
             Filters
@@ -194,7 +194,7 @@ export function WorkProfileList({
                 <Button
                   variant="ghost"
                   onClick={clearFilters}
-                  className="flex items-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+                  className="flex items-center gap-2 text-slate-600 hover:bg-primary-50 hover:text-primary-700"
                 >
                   <X className="w-4 h-4" />
                   Clear Filters
