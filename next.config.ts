@@ -11,6 +11,14 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://auth.amapi.site/api/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
