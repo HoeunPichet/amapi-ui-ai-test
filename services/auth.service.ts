@@ -1,4 +1,5 @@
 import { User } from "@/types"
+import { changePassword } from "@/lib/api"
 
 // Static credentials as specified
 const STATIC_CREDENTIALS = {
@@ -223,9 +224,6 @@ class AuthService {
   }
 
   async changePassword(credentials: PasswordChangeCredentials): Promise<AuthResponse> {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
     if (!this.currentUser) {
       return {
         success: false,
@@ -241,35 +239,52 @@ class AuthService {
       }
     }
 
-    // For demo purposes, check if current password matches the static admin password
-    // In a real app, this would verify against the stored password hash
-    if (this.currentUser.email === STATIC_CREDENTIALS.email && credentials.currentPassword !== STATIC_CREDENTIALS.password) {
+    // Get the current token
+    const token = this.getToken()
+    if (!token) {
       return {
         success: false,
-        message: "Current password is incorrect"
+        message: "No authentication token found"
       }
     }
 
-    // For other users, we'll accept any current password for demo purposes
-    // In a real app, you'd verify the actual stored password
+    try {
+      // Use the API endpoint to change password
+      const response = await changePassword({
+        currentPassword: credentials.currentPassword,
+        newPassword: credentials.newPassword
+      })
 
-    // Update user (in a real app, you'd update the password hash)
-    const updatedUser: User = {
-      ...this.currentUser,
-      updatedAt: new Date()
-    }
+      if (response.success) {
+        // Update user timestamp
+        const updatedUser: User = {
+          ...this.currentUser,
+          updatedAt: new Date()
+        }
 
-    this.currentUser = updatedUser
+        this.currentUser = updatedUser
 
-    // Update localStorage
-    if (typeof window !== "undefined") {
-      localStorage.setItem("amapi_user", JSON.stringify(updatedUser))
-    }
+        // Update localStorage
+        if (typeof window !== "undefined") {
+          localStorage.setItem("amapi_user", JSON.stringify(updatedUser))
+        }
 
-    return {
-      success: true,
-      user: updatedUser,
-      message: "Password changed successfully"
+        return {
+          success: true,
+          user: updatedUser,
+          message: response.message || "Password changed successfully"
+        }
+      } else {
+        return {
+          success: false,
+          message: response.message || "Password change failed"
+        }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message || "Password change failed"
+      }
     }
   }
 

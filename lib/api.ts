@@ -1,6 +1,131 @@
 // Use relative URLs that will be rewritten by Next.js to auth.amapi.site
 const BASE_URL = "";
 
+interface ApiRequestOptions {
+  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body?: Record<string, any> | null;
+  headers?: Record<string, string>;
+  fetchOptions?: RequestInit;
+}
+
+export async function apiRequest<T>(
+  endpoint: string,
+  {
+    method = "GET",
+    body = null,
+    headers = {},
+    fetchOptions = {},
+  }: ApiRequestOptions = {}
+): Promise<T> {
+  const defaultHeaders: Record<string, string> = {
+    Accept: "*/*",
+    "Content-Type": "application/json",
+    ...headers,
+  };
+
+  const options: RequestInit = {
+    method,
+    headers: defaultHeaders,
+    ...fetchOptions,
+  };
+
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}${endpoint}`, options);
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new ApiError(
+        errorData.message || errorData.error || errorData.detail || "Request failed",
+        response.status
+      );
+    }
+
+    const data: T = await response.json();
+    return data;
+  } catch (err) {
+    if (err instanceof ApiError) {
+      throw err;
+    }
+    
+    // Handle errors consistently
+    const errorMessage =
+      err instanceof Error ? err.message : "An unexpected error occurred";
+
+    throw new ApiError(errorMessage, 500);
+  }
+}
+
+// Helper function to get token from localStorage
+function getToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("amapi_token");
+}
+
+// Convenience functions for common HTTP methods
+export async function apiGet<T>(endpoint: string): Promise<T> {
+  const token = getToken();
+  if (!token) {
+    throw new ApiError("No authentication token found", 401);
+  }
+
+  return apiRequest<T>(endpoint, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+}
+
+export async function apiPost<T>(endpoint: string, data: any): Promise<T> {
+  const token = getToken();
+  if (!token) {
+    throw new ApiError("No authentication token found", 401);
+  }
+
+  return apiRequest<T>(endpoint, {
+    method: "POST",
+    body: data,
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+}
+
+export async function apiPut<T>(endpoint: string, data: any): Promise<T> {
+  const token = getToken();
+  
+  if (!token) {
+    throw new ApiError("No authentication token found", 401);
+  }
+
+  return apiRequest<T>(endpoint, {
+    method: "PUT",
+    body: data,
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+}
+
+export async function apiDelete<T>(endpoint: string): Promise<T> {
+  const token = getToken();
+  if (!token) {
+    throw new ApiError("No authentication token found", 401);
+  }
+
+  return apiRequest<T>(endpoint, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -34,6 +159,12 @@ export interface ResetPasswordRequest {
   otp: string;
   newPassword: string;
 }
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 
 export interface AuthResponse {
   success: boolean;
@@ -494,3 +625,36 @@ export async function logoutUser(token: string): Promise<void> {
     console.warn("Logout request failed:", error);
   }
 }
+
+export async function changePassword(data: ChangePasswordRequest): Promise<AuthResponse> {
+  try {
+    const responseData = await apiPut<AuthResponse>("/api/v1/auth/chang-password", data);
+    
+    return {
+      ...responseData,
+      success: true,
+      message: responseData.message || "Password changed successfully"
+    };
+  } catch (error) {
+    if (error instanceof ApiError) {
+      // Map specific error codes to user-friendly messages
+      let errorMessage = error.message;
+      
+      if (error.status === 400) {
+        errorMessage = "Invalid current password or new password format.";
+      } else if (error.status === 401) {
+        errorMessage = "Current password is incorrect.";
+      } else if (error.status === 403) {
+        errorMessage = "You don't have permission to change password.";
+      } else if (error.status === 422) {
+        errorMessage = "New password doesn't meet requirements.";
+      } else if (error.status && error.status >= 500) {
+        errorMessage = "Server error occurred. Please try again later.";
+      }
+      
+      throw new ApiError(errorMessage, error.status);
+    }
+    throw new ApiError("Network error occurred");
+  }
+}
+
