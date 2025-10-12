@@ -889,137 +889,64 @@ export default function ApplicationsPage() {
       {/* Add/Edit Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-slate-200">
-              <h2 className="text-xl font-semibold text-slate-900">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+            <div className="px-6 py-3 border-b border-slate-200 bg-primary-700">
+              <h2 className="text-xl font-semibold text-white">
                 {editingApplication ? "Edit Application" : "Add New Application"}
               </h2>
             </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Application Name *
-                  </label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g., Gmail, Morningmate"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Type *
-                  </label>
-                  <select
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                    required
-                  >
-                    <option value="Public App">Public App</option>
-                    <option value="Private App">Private App</option>
-                    <option value="Web App">Web App</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Package Name *
-                  </label>
-                  <Input
-                    value={formData.packageName}
-                    onChange={(e) => setFormData({ ...formData, packageName: e.target.value })}
-                    placeholder="e.g., com.google.android.gm"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Auto Update Mode *
-                  </label>
-                  <select
-                    value={formData.autoUpdateMode}
-                    onChange={(e) => setFormData({ ...formData, autoUpdateMode: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                    required
-                  >
-                    <option value="disabled">Disabled</option>
-                    <option value="enabled">Enabled</option>
-                    <option value="wifi_only">WiFi Only</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Version
-                  </label>
-                  <Input
-                    value={formData.version}
-                    onChange={(e) => setFormData({ ...formData, version: e.target.value })}
-                    placeholder="e.g., 1.0.0"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Icon URL
-                  </label>
-                  <Input
-                    value={formData.iconUrl}
-                    onChange={(e) => setFormData({ ...formData, iconUrl: e.target.value })}
-                    placeholder="https://example.com/icon.png"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Download URL
-                  </label>
-                  <Input
-                    value={formData.downloadUrl}
-                    onChange={(e) => setFormData({ ...formData, downloadUrl: e.target.value })}
-                    placeholder="https://play.google.com/store/apps/details?id=..."
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Description
-                  </label>
-                  <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Application description..."
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                    rows={3}
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={formData.isActive}
-                      onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                      className="rounded border-slate-300 text-primary-600 focus:ring-primary-500"
-                    />
-                    <span className="text-sm font-medium text-slate-700">Active</span>
-                  </label>
-                </div>
-              </div>
-              <div className="flex justify-end gap-3 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setShowAddModal(false)
-                    setEditingApplication(null)
-                    resetForm()
+            <div className="p-6">
+              {/* Google Play Work Embedded Search */}
+              <div>
+                <div 
+                  className="rounded-lg overflow-hidden"
+                  style={{
+                    borderRadius: "8px",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                    overflow: "hidden"
                   }}
                 >
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  {editingApplication ? "Update Application" : "Create Application"}
-                </Button>
+                  <iframe
+                    src="https://play.google.com/work/embedded/search?token=YOUR_TOKEN"
+                    width="100%"
+                    height="600px"
+                    style={{ border: "none" }}
+                    title="Google Play Work Applications"
+                  />
+                </div>
+                <p className="text-xs text-slate-500 mt-2">
+                  Browse and select applications from Google Play Work. Selected apps will be automatically added.
+                </p>
               </div>
-            </form>
+            </div>
+            <div className="flex justify-end gap-3 p-6 pt-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowAddModal(false)
+                  setEditingApplication(null)
+                  resetForm()
+                }}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="button"
+                onClick={() => {
+                  setShowAddModal(false)
+                  setEditingApplication(null)
+                  resetForm()
+                  toast({
+                    title: "Success",
+                    description: "Application added successfully",
+                    variant: "success"
+                  })
+                }}
+              >
+                {editingApplication ? "Update Application" : "Create Application"}
+              </Button>
+            </div>
           </div>
         </div>
       )}

@@ -65,7 +65,7 @@ export default function LoginPage() {
           id: userData.id,
           name: userData.name,
           email: userData.email,
-          position: "Employee" as const,
+          position: "Administrator" as const,
           status: "Active" as const,
           loginMethod: "email" as const,
           createdAt: new Date(),

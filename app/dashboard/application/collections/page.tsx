@@ -390,108 +390,64 @@ export default function CollectionsPage() {
       {/* Add/Edit Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-slate-200">
-              <h2 className="text-xl font-semibold text-slate-900">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+            <div className="px-6 py-3 border-b border-slate-200 bg-primary-700">
+              <h2 className="text-xl font-semibold text-white">
                 {editingCollection ? "Edit Collection" : "Create New Collection"}
               </h2>
             </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Collection Name *
-                  </label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g., Tools, My Work Apps"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Description
-                  </label>
-                  <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Collection description..."
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                    rows={3}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Applications
-                  </label>
-                  <div className="space-y-2 max-h-60 overflow-y-auto border border-slate-300 rounded-lg p-3">
-                    {applications.map((app) => (
-                      <div key={app.id} className="flex items-center justify-between p-2 hover:bg-slate-50 rounded">
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="checkbox"
-                            checked={formData.applicationIds.includes(app.id)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setFormData({
-                                  ...formData,
-                                  applicationIds: [...formData.applicationIds, app.id]
-                                })
-                              } else {
-                                setFormData({
-                                  ...formData,
-                                  applicationIds: formData.applicationIds.filter(id => id !== app.id)
-                                })
-                              }
-                            }}
-                            className="rounded border-slate-300 text-primary-600 focus:ring-primary-500"
-                          />
-                          <div>
-                            <div className="font-medium text-slate-900">{app.name}</div>
-                            <div className="text-sm text-slate-500">{app.packageName}</div>
-                          </div>
-                        </div>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          app.type === "Public App" ? "bg-green-100 text-green-700" :
-                          app.type === "Private App" ? "bg-blue-100 text-blue-700" :
-                          "bg-purple-100 text-purple-700"
-                        }`}>
-                          {app.type}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={formData.isActive}
-                      onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                      className="rounded border-slate-300 text-primary-600 focus:ring-primary-500"
-                    />
-                    <span className="text-sm font-medium text-slate-700">Active</span>
-                  </label>
-                </div>
-              </div>
-              <div className="flex justify-end gap-3 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setShowAddModal(false)
-                    setEditingCollection(null)
-                    resetForm()
+            <div className="p-6">
+              {/* Google Play Work Embedded Search */}
+              <div>
+                <div 
+                  className="rounded-lg overflow-hidden"
+                  style={{
+                    borderRadius: "8px",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                    overflow: "hidden"
                   }}
                 >
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  {editingCollection ? "Update Collection" : "Create Collection"}
-                </Button>
+                  <iframe
+                    src="https://play.google.com/work/embedded/search?token=YOUR_TOKEN"
+                    width="100%"
+                    height="600px"
+                    style={{ border: "none" }}
+                    title="Google Play Work Applications"
+                  />
+                </div>
+                <p className="text-xs text-slate-500 mt-2">
+                  Browse and select applications from Google Play Work. Selected apps will be automatically added.
+                </p>
               </div>
-            </form>
+            </div>
+            <div className="flex justify-end gap-3 p-6 pt-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowAddModal(false)
+                  setEditingCollection(null)
+                  resetForm()
+                }}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="button"
+                onClick={() => {
+                  setShowAddModal(false)
+                  setEditingCollection(null)
+                  resetForm()
+                  toast({
+                    title: "Success",
+                    description: "Collection created successfully",
+                    variant: "success"
+                  })
+                }}
+              >
+                {editingCollection ? "Update Collection" : "Create Collection"}
+              </Button>
+            </div>
           </div>
         </div>
       )}

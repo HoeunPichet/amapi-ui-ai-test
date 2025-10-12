@@ -141,7 +141,7 @@ class AmapiService {
       id: "user-2",
       name: "Jane Smith",
       email: "jane@techcorp.com",
-      position: "Employee",
+      position: "Administrator",
       loginMethod: "email",
       status: "Active",
       departmentId: "dept-2",

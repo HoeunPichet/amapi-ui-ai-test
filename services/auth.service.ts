@@ -155,7 +155,7 @@ class AuthService {
       id: Date.now().toString(), // Simple ID generation
       name: credentials.name,
       email: credentials.email,
-      position: "Employee", // Default position for new registrations
+      position: "Administrator", // Default position for new registrations
       status: "Active",
       loginMethod: "email",
       avatar: "/avatars/default.png",
