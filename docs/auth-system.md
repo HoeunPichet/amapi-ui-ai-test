@@ -4,8 +4,8 @@
 This authentication system integrates with the Swagger API endpoints from `https://auth.amapi.site/swagger-ui/index.html` to provide secure login and registration functionality.
 
 ## API Endpoints
-- **POST** `/api/v1/auth/login` → User login
-- **POST** `/api/v1/auth/signup` → User registration
+- **POST** `/api/v1/auths/login` → User login
+- **POST** `/api/v1/auths/signup` → User registration
 
 ## File Structure
 ```
@@ -66,14 +66,14 @@ ui/
 ### API Service (`lib/api.ts`)
 - **Base URL**: `https://auth.amapi.site`
 - **Endpoints**: 
-  - `POST /api/v1/auth/login` - User login
-  - `POST /api/v1/auth/signup` - User registration
-  - `POST /api/v1/auth/verify-opt` - OTP verification
-  - `POST /api/v1/auth/resend-otp` - Resend OTP
-  - `POST /api/v1/auth/forget-password` - Forgot password
-  - `POST /api/v1/auth/reset-password` - Reset password
-  - `POST /api/v1/auth/refresh` - Token refresh
-  - `POST /api/v1/auth/logout` - User logout
+  - `POST /api/v1/auths/login` - User login
+  - `POST /api/v1/auths/signup` - User registration
+  - `POST /api/v1/auths/verify-opt` - OTP verification
+  - `POST /api/v1/auths/resend-otp` - Resend OTP
+  - `POST /api/v1/auths/forget-password` - Forgot password
+  - `POST /api/v1/auths/reset-password` - Reset password
+  - `POST /api/v1/auths/refresh` - Token refresh
+  - `POST /api/v1/auths/logout` - User logout
 - **Error Handling**: Custom ApiError class with status codes and validation error parsing
 - **Token Management**: Automatic token storage and retrieval
 - **Type Safety**: Full TypeScript support with proper interfaces

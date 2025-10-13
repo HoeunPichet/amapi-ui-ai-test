@@ -8,10 +8,8 @@ import { useToast } from "@/hooks/use-simple-toast"
 import { Button } from "@/ui/button"
 import { cn } from "@/lib/utils"
 import { 
-  Home, 
   Smartphone, 
   Shield, 
-  Building, 
   Building2,
   Users,
   User,
@@ -32,11 +30,11 @@ import {
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: ActivityIcon, color: "text-blue-600" },
     { name: "Device", href: "/dashboard/device", icon: Smartphone, color: "text-green-600" },
-    { name: "Policy", href: "/dashboard/policy", icon: Shield, color: "text-purple-600" },
+    // { name: "Policy", href: "/dashboard/policy", icon: Shield, color: "text-purple-600" },
     { name: "Application", href: "/dashboard/application", icon: Grid3X3, color: "text-emerald-600" },
-    { name: "Department", href: "/dashboard/department", icon: Building2, color: "text-indigo-600" },
-    { name: "Work Profile", href: "/dashboard/work-profile", icon: Users, color: "text-cyan-600" },
-    { name: "Setting", href: "/dashboard/setting", icon: Settings, color: "text-pink-600" },
+    // { name: "Department", href: "/dashboard/department", icon: Building2, color: "text-indigo-600" },
+    // { name: "Work Profile", href: "/dashboard/work-profile", icon: Users, color: "text-cyan-600" },
+    // { name: "Setting", href: "/dashboard/setting", icon: Settings, color: "text-pink-600" },
   ]
 
 export default function DashboardLayout({

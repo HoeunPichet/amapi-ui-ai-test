@@ -187,7 +187,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                Welcome back, {user?.name?.split(' ')[0]}! 👋
+                Welcome back, <span className="uppercase">{user?.name?.split(' ')[0]}! 👋</span>
               </h1>
               <p className="text-slate-600 mt-1 text-sm sm:text-base">
                 Here's what's happening with your Android devices today.

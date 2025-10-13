@@ -358,29 +358,6 @@ export default function RegisterPage() {
               )}
             </div>
 
-            {/* Email Field */}
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-slate-700">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  {...register("email")}
-                  className={`pl-10 ${errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
-                />
-              </div>
-              {errors.email && (
-                <div className="flex items-center gap-2 text-sm text-red-600">
-                  <AlertCircle className="w-4 h-4" />
-                  {errors.email.message}
-                </div>
-              )}
-            </div>
-
             {/* First Name Field */}
             <div className="space-y-2">
               <label htmlFor="firstName" className="text-sm font-medium text-slate-700">
@@ -423,6 +400,29 @@ export default function RegisterPage() {
                 <div className="flex items-center gap-2 text-sm text-red-600">
                   <AlertCircle className="w-4 h-4" />
                   {errors.lastName.message}
+                </div>
+              )}
+            </div>
+
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm font-medium text-slate-700">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  {...register("email")}
+                  className={`pl-10 ${errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                />
+              </div>
+              {errors.email && (
+                <div className="flex items-center gap-2 text-sm text-red-600">
+                  <AlertCircle className="w-4 h-4" />
+                  {errors.email.message}
                 </div>
               )}
             </div>

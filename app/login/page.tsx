@@ -38,7 +38,7 @@ export default function LoginPage() {
     clearErrors()
 
     try {
-      const response = await loginUser({ ...data, rememberMe: false })
+      const response = await loginUser({ ...data, rememberMe: true })
       
       if (response.success && response.access_token) {
         localStorage.setItem("amapi_token", response.access_token)

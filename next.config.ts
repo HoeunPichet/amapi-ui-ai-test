@@ -1,21 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {
-      rules: {
-        '*.css': {
-          loaders: ['@tailwindcss/vite'],
-          as: '*.css',
-        },
-      },
-    },
-  },
+  // experimental: {
+  //   turbo: {
+  //     rules: {
+  //       '*.css': {
+  //         loaders: ['@tailwindcss/vite'],
+  //         as: '*.css',
+  //       },
+  //     },
+  //   },
+  // },
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://auth.amapi.site/api/:path*',
+        destination: 'https://api.amapi.site/api/:path*',
       },
     ];
   },

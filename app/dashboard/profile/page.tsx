@@ -232,7 +232,7 @@ export default function ProfilePage() {
             </span>
           </div>
           <div>
-            <p className="font-semibold text-slate-900">{user.name}</p>
+            <p className="font-semibold text-slate-900 uppercase">{user.name}</p>
             <p className="text-sm text-slate-500">{user.position}</p>
           </div>
         </div>

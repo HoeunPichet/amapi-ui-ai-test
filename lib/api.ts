@@ -198,7 +198,7 @@ class ApiError extends Error {
 
 export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
   try {
-    const res = await fetch(`/api/v1/auth/login`, {
+    const res = await fetch(`/api/v1/auths/login`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -261,7 +261,7 @@ export async function loginUser(data: LoginRequest): Promise<AuthResponse> {
 
 export async function registerUser(data: RegisterRequest): Promise<AuthResponse> {
   try {
-    const res = await fetch(`/api/v1/auth/signup`, {
+    const res = await fetch(`/api/v1/auths/signup`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -324,7 +324,7 @@ export async function registerUser(data: RegisterRequest): Promise<AuthResponse>
 
 export async function refreshToken(token: string): Promise<AuthResponse> {
   try {
-    const res = await fetch(`/api/v1/auth/refresh`, {
+    const res = await fetch(`/api/v1/auths/refresh`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -371,7 +371,7 @@ export async function refreshToken(token: string): Promise<AuthResponse> {
 
 export async function verifyOtp(data: VerifyOtpRequest): Promise<AuthResponse> {
   try {
-    const res = await fetch(`/api/v1/auth/verify-otp`, {
+    const res = await fetch(`/api/v1/auths/verify-otp`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -436,7 +436,7 @@ export async function verifyOtp(data: VerifyOtpRequest): Promise<AuthResponse> {
 
 export async function resendOtp(data: ResendOtpRequest): Promise<{ success: boolean; message?: string }> {
   try {
-    const res = await fetch(`/api/v1/auth/resend-otp`, {
+    const res = await fetch(`/api/v1/auths/resend-otp`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -491,7 +491,7 @@ export async function forgotPassword(data: ForgotPasswordRequest): Promise<{ suc
   try {
     console.log("API forgotPassword request:", data)
     
-    const res = await fetch(`/api/v1/auth/forget-password`, {
+    const res = await fetch(`/api/v1/auths/forget-password`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -548,7 +548,7 @@ export async function resetPassword(data: ResetPasswordRequest): Promise<AuthRes
   try {
     console.log("API resetPassword request:", data)
     
-    const res = await fetch(`/api/v1/auth/reset-password`, {
+    const res = await fetch(`/api/v1/auths/reset-password`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -613,7 +613,7 @@ export async function resetPassword(data: ResetPasswordRequest): Promise<AuthRes
 
 export async function logoutUser(token: string): Promise<void> {
   try {
-    await fetch(`${BASE_URL}/api/v1/auth/logout`, {
+    await fetch(`${BASE_URL}/api/v1/auths/logout`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -628,7 +628,7 @@ export async function logoutUser(token: string): Promise<void> {
 
 export async function changePassword(data: ChangePasswordRequest): Promise<AuthResponse> {
   try {
-    const responseData = await apiPut<AuthResponse>("/api/v1/auth/chang-password", data);
+    const responseData = await apiPut<AuthResponse>("/api/v1/auths/chang-password", data);
     
     return {
       ...responseData,
