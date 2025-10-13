@@ -98,23 +98,23 @@ export default function LandingPage() {
 
   const testimonials = [
     {
-      name: "Sarah Chen",
-      role: "IT Director",
-      company: "TechCorp",
+      name: "Neth Mesaboth",
+      role: "DevOps Engineer",
+      company: "Phsar Depou",
       content: "AMAPI transformed our device management. The interface is intuitive and the security features are top-notch.",
       rating: 5
     },
     {
-      name: "Michael Rodriguez",
-      role: "CTO",
-      company: "StartupXYZ",
+      name: "Horn Narin",
+      role: "Project Manager",
+      company: "Wat Phnom",
       content: "Best investment we made for our mobile infrastructure. Setup was seamless and support is excellent.",
       rating: 5
     },
     {
-      name: "Emily Watson",
-      role: "Security Manager",
-      company: "FinanceFirst",
+      name: "Y Chanphyrat",
+      role: "Full-Stack Engineer",
+      company: "Teuk Thlar",
       content: "The security compliance features saved us months of manual work. Highly recommended!",
       rating: 5
     }
@@ -185,7 +185,7 @@ export default function LandingPage() {
             <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <Link href="/register">
                 <Button size="lg" className="bg-primary-500 hover:bg-primary-600 text-white shadow-xl px-8 py-4 text-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
-                  Start Free Trial
+                  Start For Free
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
               </Link>
@@ -396,7 +396,7 @@ export default function LandingPage() {
           <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <Link href="/register">
               <Button size="lg" className="bg-primary-500 hover:bg-primary-600 text-white shadow-xl px-8 py-4 text-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-shimmer">
-                Start Your Free Trial
+                Start Your Enterprise
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
             </Link>
@@ -410,7 +410,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 py-12 px-6">
+      <footer className="bg-slate-900 py-8 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className={`flex items-center gap-3 mb-6 md:mb-0 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
@@ -425,10 +425,7 @@ export default function LandingPage() {
             
             <div className={`text-center md:text-right transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
               <p className="text-slate-400 text-sm">
-                © 2024 AMAPI. All rights reserved.
-              </p>
-              <p className="text-slate-500 text-xs mt-1">
-                Made with ❤️ for enterprise teams
+                © 2025 ADMS. All rights reserved.
               </p>
             </div>
           </div>

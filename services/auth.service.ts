@@ -12,6 +12,11 @@ const GOOGLE_CREDENTIALS = {
   name: "Google Admin"
 }
 
+const GITHUB_CREDENTIALS = {
+  email: "admin.github@gmail.com",
+  name: "GitHub Admin"
+}
+
 export interface LoginCredentials {
   email: string
   password: string
@@ -21,6 +26,12 @@ export interface GoogleLoginCredentials {
   email: string
   name: string
   googleId: string
+}
+
+export interface GitHubLoginCredentials {
+  email: string
+  name: string
+  githubId: string
 }
 
 export interface RegisterCredentials {
@@ -121,6 +132,35 @@ class AuthService {
       status: "Active",
       loginMethod: "google",
       avatar: "/avatars/google-admin.png",
+      lastLogin: new Date(),
+      createdAt: new Date("2024-01-01"),
+      updatedAt: new Date()
+    }
+    
+    const token = this.generateToken()
+    this.currentUser = user
+    this.token = token
+    
+    if (typeof window !== "undefined") {
+      localStorage.setItem("amapi_user", JSON.stringify(user))
+      localStorage.setItem("amapi_token", token)
+    }
+    
+    return { success: true, user, token }
+  }
+
+  async loginWithGitHub(credentials: GitHubLoginCredentials): Promise<AuthResponse> {
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    // Simulate GitHub login - accept any GitHub credentials for demo
+    const user: User = {
+      id: "3",
+      name: credentials.name,
+      email: credentials.email,
+      position: "Administrator",
+      status: "Active",
+      loginMethod: "github",
+      avatar: "/avatars/github-admin.png",
       lastLogin: new Date(),
       createdAt: new Date("2024-01-01"),
       updatedAt: new Date()

@@ -907,7 +907,7 @@ export default function ApplicationsPage() {
                   }}
                 >
                   <iframe
-                    src="https://play.google.com/work/embedded/search?token=YOUR_TOKEN"
+                    src="https://play.google.com/work/embedded/search?token=EAHDcJOMBXBANbNCk7AfYmWDCQGixCYks08_PtzCdgGgm3M4eDRE_aIrTH-HIQE9GH3BznJKhffH1_9aiYGvAa6YIxWmcIm7NgRzW-QH04WhkmaLW-7wf-QI"
                     width="100%"
                     height="600px"
                     style={{ border: "none" }}

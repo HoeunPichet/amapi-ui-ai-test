@@ -4,7 +4,7 @@ export interface User {
   email: string
   position: "Administrator" | "Manager" | "Employee" | "Viewer"
   status: "Active" | "Inactive"
-  loginMethod: "email" | "google"
+  loginMethod: "email" | "google" | "github"
   departmentId?: string
   avatar?: string
   lastLogin?: Date

@@ -2,13 +2,14 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { User } from "@/types"
-import { authService, LoginCredentials, GoogleLoginCredentials, RegisterCredentials, ProfileUpdateCredentials, PasswordChangeCredentials } from "@/services/auth.service"
+import { authService, LoginCredentials, GoogleLoginCredentials, GitHubLoginCredentials, RegisterCredentials, ProfileUpdateCredentials, PasswordChangeCredentials } from "@/services/auth.service"
 
 interface AuthContextType {
   user: User | null
   loading: boolean
   login: (credentials: LoginCredentials) => Promise<boolean>
   loginWithGoogle: (credentials: GoogleLoginCredentials) => Promise<boolean>
+  loginWithGitHub: (credentials: GitHubLoginCredentials) => Promise<boolean>
   register: (credentials: RegisterCredentials) => Promise<boolean>
   updateProfile: (credentials: ProfileUpdateCredentials) => Promise<boolean>
   changePassword: (credentials: PasswordChangeCredentials) => Promise<boolean>
@@ -126,6 +127,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const loginWithGitHub = async (credentials: GitHubLoginCredentials): Promise<boolean> => {
+    setLoading(true)
+    try {
+      const response = await authService.loginWithGitHub(credentials)
+      if (response.success && response.user) {
+        setUser(response.user)
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error("GitHub login error:", error)
+      return false
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const register = async (credentials: RegisterCredentials): Promise<boolean> => {
     setLoading(true)
     try {
@@ -212,6 +230,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading,
     login,
     loginWithGoogle,
+    loginWithGitHub,
     register,
     updateProfile,
     changePassword,
