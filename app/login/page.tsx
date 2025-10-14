@@ -12,6 +12,7 @@ import { Button } from "@/ui/button"
 import { Input } from "@/ui/input"
 import { useToast } from "@/hooks/use-simple-toast"
 import { useAuth } from "@/hooks/use-auth"
+import { LoginGoogleButton } from "@/components/button/login-google-button"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -211,6 +212,8 @@ export default function LoginPage() {
             Sign in to manage your Android devices
           </p>
         </div>
+
+        <LoginGoogleButton />
 
         {/* Login Form */}
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
