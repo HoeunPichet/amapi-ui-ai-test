@@ -249,12 +249,11 @@ class AmapiService {
     
     const stats: DashboardStats = {
       totalDevices: this.mockDevices.length,
-      activeDevices: this.mockDevices.filter(d => d.status === "Active").length,
       totalUsers: this.mockUsers.length,
       activeUsers: this.mockUsers.filter(u => u.status === "Active").length,
       totalPolicies: this.mockPolicies.length,
-      activePolicies: this.mockPolicies.filter(p => p.isActive).length,
       totalEnterprises: this.mockEnterprises.length,
+      totalApplications: this.mockApplications.length,
       recentActivity: [
         {
           id: "act-1",

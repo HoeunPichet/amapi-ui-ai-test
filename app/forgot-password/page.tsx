@@ -125,7 +125,7 @@ export default function ForgotPasswordPage() {
         localStorage.setItem("amapi_user", JSON.stringify(userData))
         
         setTimeout(() => {
-          router.push("/dashboard")
+          router.push("/login")
         }, 2000)
       }
     } catch (err: any) {
@@ -165,7 +165,7 @@ export default function ForgotPasswordPage() {
                 Welcome back!
               </h2>
               <p className="text-slate-600">
-                Redirecting you to the dashboard...
+                Redirecting you to the login...
               </p>
             </div>
           </div>

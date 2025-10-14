@@ -9,19 +9,14 @@ import {
   Users, 
   Shield, 
   Building2, 
-  TrendingUp, 
   Activity,
   Battery,
   HardDrive,
-  ActivityIcon,
   Monitor,
   Clock,
-  ArrowUpRight,
-  ArrowDownRight,
   Zap,
   Globe,
   CheckCircle,
-  AlertCircle,
   Calendar,
   BarChart3
 } from "lucide-react"
@@ -98,46 +93,29 @@ export default function DashboardPage() {
     {
       title: "Total Devices",
       value: stats?.totalDevices || 0,
-      change: "+12%",
-      changeType: "positive" as const,
       icon: Smartphone,
       gradient: "from-blue-500 to-blue-600",
       iconBg: "bg-blue-100",
       iconColor: "text-blue-600",
-      changeColor: "text-green-600"
-    },
-    {
-      title: "Active Devices",
-      value: stats?.activeDevices || 0,
-      change: "+8%",
-      changeType: "positive" as const,
-      icon: Activity,
-      gradient: "from-green-500 to-green-600",
-      iconBg: "bg-green-100",
-      iconColor: "text-green-600",
-      changeColor: "text-green-600"
+      description: "Registered Android devices"
     },
     {
       title: "Total Users",
       value: stats?.totalUsers || 0,
-      change: "+5%",
-      changeType: "positive" as const,
       icon: Users,
       gradient: "from-purple-500 to-purple-600",
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
-      changeColor: "text-green-600"
+      description: "System users"
     },
     {
-      title: "Active Policies",
-      value: stats?.activePolicies || 0,
-      change: "+3%",
-      changeType: "positive" as const,
-      icon: Shield,
-      gradient: "from-primary-500 to-primary-600",
-      iconBg: "bg-primary-100",
-      iconColor: "text-primary-600",
-      changeColor: "text-green-600"
+      title: "Total Applications",
+      value: stats?.totalApplications || 0,
+      icon: Globe,
+      gradient: "from-emerald-500 to-teal-600",
+      iconBg: "bg-emerald-100",
+      iconColor: "text-emerald-600",
+      description: "Managed applications"
     }
   ]
 
@@ -177,205 +155,259 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center shadow-lg">
-              <BarChart3 className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                Welcome back, <span className="uppercase">{user?.name?.split(' ')[0]}! 👋</span>
-              </h1>
-              <p className="text-slate-600 mt-1 text-sm sm:text-base">
-                Here's what's happening with your Android devices today.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm border border-slate-200">
-          <div className="text-right">
-            <p className="text-xs text-slate-500">Last updated</p>
-            <p className="text-sm font-semibold text-slate-700">
-              {new Date().toLocaleTimeString()}
-            </p>
-          </div>
-          <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse shadow-lg"></div>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((stat, index) => (
-          <div
-            key={index}
-            className="group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 hover:transform hover:scale-[1.02] relative overflow-hidden"
-          >
-            {/* Gradient overlay */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
-            
-            <div className="relative">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 rounded-xl ${stat.iconBg} shadow-sm group-hover:shadow-md transition-shadow`}>
-                  <stat.icon className={`w-6 h-6 ${stat.iconColor}`} />
+    <div className="min-h-screen">
+      <div className="max-w-7xl">
+        {/* Header Section */}
+        <div className="mb-12">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="w-16 h-16 bg-primary-500 rounded-3xl flex items-center justify-center shadow-xl shadow-emerald-500/25">
+                    <BarChart3 className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 text-sm">
-                  <ArrowUpRight className="w-4 h-4 text-green-500" />
-                  <span className={`font-semibold ${stat.changeColor}`}>{stat.change}</span>
-                </div>
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-slate-900 mb-2">
-                  {stat.value.toLocaleString()}
-                </p>
-                <p className="text-sm text-slate-600 font-medium">{stat.title}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Quick Actions */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-sm">
-            <Zap className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-slate-900">Quick Actions</h2>
-            <p className="text-sm text-slate-600">Get started with common tasks</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {quickActions.map((action, index) => (
-            <a
-              key={index}
-              href={action.href}
-              className="group p-4 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-200 hover:transform hover:scale-[1.02]"
-            >
-              <div className={`w-12 h-12 ${action.bgColor} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                <action.icon className={`w-6 h-6 ${action.color}`} />
-              </div>
-              <h3 className="font-semibold text-slate-900 text-sm mb-1">{action.title}</h3>
-              <p className="text-xs text-slate-600">{action.description}</p>
-            </a>
-          ))}
-        </div>
-      </div>
-
-      {/* Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Activity */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-sm">
-                <Activity className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-slate-900">Recent Activity</h2>
-                <p className="text-sm text-slate-600">Latest system events</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <Clock className="w-4 h-4" />
-              <span>Live</span>
-            </div>
-          </div>
-          <div className="space-y-4">
-            {stats?.recentActivity.slice(0, 5).map((activity, index) => (
-              <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">
-                <div className="w-2 h-2 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full mt-2 flex-shrink-0"></div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-slate-900 font-medium">{activity.description}</p>
-                  <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
-                    {new Date(activity.timestamp).toLocaleString()}
+                <div>
+                  <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+                    Welcome back,{' '}
+                    <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                      {user?.name?.split(' ')[0]}
+                    </span>
+                  </h1>
+                  <p className="text-lg text-slate-600 mt-2 font-medium">
+                    Here's your AMAPI management overview
                   </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-3 bg-white/80 backdrop-blur-sm rounded-2xl px-6 py-4 shadow-lg border border-white/20">
+                <div className="text-right">
+                  <p className="text-sm font-medium text-slate-500">Last updated</p>
+                  <p className="text-lg font-bold text-slate-800">
+                    {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+                <div className="w-4 h-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse shadow-lg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {statCards.map((stat, index) => (
+              <div
+                key={index}
+                className="group relative bg-white/70 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-lg hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-700 hover:transform hover:scale-[1.02] hover:-translate-y-1 overflow-hidden"
+              >
+                {/* Animated background gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-all duration-700`}></div>
+                
+                {/* Floating elements */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-white/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-1000"></div>
+                  <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-tr from-white/5 to-transparent rounded-full group-hover:scale-125 transition-transform duration-1000 delay-100"></div>
+                </div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between mb-8">
+                    <div className={`p-4 rounded-2xl ${stat.iconBg} shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-500`}>
+                      <stat.icon className={`w-7 h-7 ${stat.iconColor}`} />
+                    </div>
+                    <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-baseline gap-2">
+                      <p className="text-4xl font-bold text-slate-900 group-hover:text-slate-800 transition-colors duration-300">
+                        {stat.value.toLocaleString()}
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-800 mb-2">{stat.title}</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed font-medium">{stat.description}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* System Status */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-sm">
-                <Monitor className="w-5 h-5 text-white" />
+        {/* Quick Actions */}
+        <div className="mb-12">
+          <div className="bg-white/70 backdrop-blur-sm rounded-3xl border border-white/20 shadow-xl p-10 hover:shadow-2xl transition-all duration-500">
+            <div className="flex items-center gap-6 mb-10">
+              <div className="relative">
+                <div className="w-16 h-16 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 rounded-3xl flex items-center justify-center shadow-xl shadow-orange-500/25">
+                  <Zap className="w-8 h-8 text-white" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                </div>
               </div>
               <div>
-                <h2 className="text-xl font-bold text-slate-900">System Status</h2>
-                <p className="text-sm text-slate-600">Service health overview</p>
+                <h2 className="text-3xl font-bold text-slate-900 mb-2">Quick Actions</h2>
+                <p className="text-lg text-slate-600 font-medium">Streamline your workflow with these common tasks</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-xs text-green-600">
-              <CheckCircle className="w-4 h-4" />
-              <span>All Systems Operational</span>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {quickActions.map((action, index) => (
+                <a
+                  key={index}
+                  href={action.href}
+                  className="group relative bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/30 hover:border-white/50 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-500 hover:transform hover:scale-[1.03] hover:-translate-y-1 overflow-hidden"
+                >
+                  {/* Animated background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  {/* Floating elements */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/10 to-transparent rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+                  </div>
+                  
+                  <div className="relative z-10">
+                    <div className={`w-16 h-16 ${action.bgColor} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:shadow-lg transition-all duration-500`}>
+                      <action.icon className={`w-8 h-8 ${action.color}`} />
+                    </div>
+                    <h3 className="font-bold text-slate-900 text-lg mb-3 group-hover:text-slate-800 transition-colors duration-300">{action.title}</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed font-medium">{action.description}</p>
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 border border-green-200">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Battery className="w-4 h-4 text-green-600" />
+        </div>
+
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Recent Activity */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-3xl border border-white/20 shadow-xl p-8 hover:shadow-2xl transition-all duration-500">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/25">
+                    <Activity className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+                  </div>
                 </div>
                 <div>
-                  <span className="text-sm font-medium text-slate-900">API Health</span>
-                  <p className="text-xs text-slate-600">Response time: 45ms</p>
+                  <h2 className="text-2xl font-bold text-slate-900">Recent Activity</h2>
+                  <p className="text-slate-600 font-medium">Latest system events</p>
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-green-600">
-                <CheckCircle className="w-4 h-4" />
-                <span className="text-sm font-medium">Healthy</span>
+              <div className="flex items-center gap-2 bg-emerald-50 px-3 py-2 rounded-full">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-emerald-700">Live</span>
               </div>
             </div>
-            <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 border border-green-200">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                  <HardDrive className="w-4 h-4 text-green-600" />
+            <div className="space-y-4">
+              {stats?.recentActivity.slice(0, 5).map((activity, index) => (
+                <div key={activity.id} className="group flex items-start gap-4 p-4 rounded-2xl hover:bg-white/50 transition-all duration-300 hover:shadow-md">
+                  <div className="w-3 h-3 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform duration-300"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-slate-900 font-semibold leading-relaxed">{activity.description}</p>
+                    <p className="text-xs text-slate-500 mt-2 flex items-center gap-2">
+                      <Calendar className="w-3 h-3" />
+                      {new Date(activity.timestamp).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* System Status */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-3xl border border-white/20 shadow-xl p-8 hover:shadow-2xl transition-all duration-500">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/25">
+                    <Monitor className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-3 h-3 text-white" />
+                  </div>
                 </div>
                 <div>
-                  <span className="text-sm font-medium text-slate-900">Database</span>
-                  <p className="text-xs text-slate-600">Uptime: 99.9%</p>
+                  <h2 className="text-2xl font-bold text-slate-900">System Status</h2>
+                  <p className="text-slate-600 font-medium">Service health overview</p>
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-green-600">
-                <CheckCircle className="w-4 h-4" />
-                <span className="text-sm font-medium">Connected</span>
+              <div className="flex items-center gap-2 bg-green-50 px-3 py-2 rounded-full">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                <span className="text-sm font-medium text-green-700">All Operational</span>
               </div>
             </div>
-            <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 border border-green-200">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-green-600" />
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <Battery className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold text-slate-900">API Health</span>
+                    <p className="text-xs text-slate-600 font-medium">Response time: 45ms</p>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-sm font-medium text-slate-900">Security</span>
-                  <p className="text-xs text-slate-600">All checks passed</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-1 text-green-600">
-                <CheckCircle className="w-4 h-4" />
-                <span className="text-sm font-medium">Secure</span>
-              </div>
-            </div>
-            <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 border border-green-200">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Building2 className="w-4 h-4 text-green-600" />
-                </div>
-                <div>
-                  <span className="text-sm font-medium text-slate-900">Enterprises</span>
-                  <p className="text-xs text-slate-600">All active</p>
+                <div className="flex items-center gap-2 text-green-600">
+                  <CheckCircle className="w-5 h-5" />
+                  <span className="text-sm font-bold">Healthy</span>
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-green-600">
-                <CheckCircle className="w-4 h-4" />
-                <span className="text-sm font-medium">Active</span>
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <HardDrive className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold text-slate-900">Database</span>
+                    <p className="text-xs text-slate-600 font-medium">Uptime: 99.9%</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-green-600">
+                  <CheckCircle className="w-5 h-5" />
+                  <span className="text-sm font-bold">Connected</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold text-slate-900">Security</span>
+                    <p className="text-xs text-slate-600 font-medium">All checks passed</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-green-600">
+                  <CheckCircle className="w-5 h-5" />
+                  <span className="text-sm font-bold">Secure</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <Building2 className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold text-slate-900">Enterprises</span>
+                    <p className="text-xs text-slate-600 font-medium">All active</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-green-600">
+                  <CheckCircle className="w-5 h-5" />
+                  <span className="text-sm font-bold">Active</span>
+                </div>
               </div>
             </div>
           </div>

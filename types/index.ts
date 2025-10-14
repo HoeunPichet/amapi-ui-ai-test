@@ -116,12 +116,11 @@ export interface PaginatedResponse<T> {
 
 export interface DashboardStats {
   totalDevices: number
-  activeDevices: number
   totalUsers: number
   activeUsers: number
   totalPolicies: number
-  activePolicies: number
   totalEnterprises: number
+  totalApplications?: number
   recentActivity: Activity[]
 }
 

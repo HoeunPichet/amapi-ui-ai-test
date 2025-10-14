@@ -24,7 +24,6 @@ import {
   FolderOpen
 } from "lucide-react"
 import { useToast } from "@/hooks/use-simple-toast"
-import AndroidAppApproval from "@/components/android-app-approve"
 
 export default function ApplicationsPage() {
   const pathname = usePathname()
@@ -887,8 +886,6 @@ export default function ApplicationsPage() {
         </>
       )}
 
-      <AndroidAppApproval />
-
       {/* Add/Edit Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -910,9 +907,10 @@ export default function ApplicationsPage() {
                   }}
                 >
                   <iframe
-                    src="https://play.google.com/work/embedded/search?mode=SELECT&token=ya29.c.c0ASRK0Gbx42a6rrrlEC-oRwWFC_zQuVhRi-uTm4Y6s6kjZlQ1Q4HLfg1_YNlKkJEycSguESNEe4Q6MOBijf2bRtBLnHTrzZNE2cwTPNM_tZm7L2ApJe8mDSfA4JqbmnE42gq26BQvzaU4mxMPZn0zKJf75R7Wc1JhhQjDRJPAZu5KktJTpInlntMOOc8LFnb3nZ5P9dcNHPEgRNio8at9Y6Xv0sOrJL5HgS4k7ksYeM9M9Vcwt4bGufA3Urx4z3iqpR-nGhTXPI7mQcYwjORK4UT111oHkhIkEnclrFD7i3Q53gXNOmzTNpT9B8x48DcV3lGpsnW_tHuMaFQkgdCQKEiKmQzEw2AyQ-nLu-iV8PQPp4WQn5bXiJEN384A8fk0gWMtlFR61F6UsYje4tWp2Yoyd4Zgcd9gsuhj7Um-MVevdFQR65qsYwViwRjcjYkvpXO66QsrStgbsboFUj6_3md-trjhIyOFvbZihSy3s3htYVisf5_OubUajmYvgkOyWbgfz-qzJ5_t1YpMJagOro6dSllbvB2Ft8WBZ5qIFB-j7Sc36vrocVeQg-9o5z9MzsnlhzX5e4JOb-_ivQ55-JdZUXbt9gOFoI_myj_wyacRwdSzXv0xecVStsV1O3xejzFrmUdw92WYeod9Op27jBoIj2rv_7xXiU7e55eJ7-jMwqyYy_35WbidO27Mowaqk0fvM0bagnb_kjygij_jc-rl-X6UitQ-6k--RX08jUFu9uFXgw8lt5OMxdXbd6uX27-86_o1gqSU70bdYUlY9dIremXxQ9BsU8i2y2x1acIhjOR4wB_Z0dZ84fcYzmau5sIqgYvkQed88b97hYY2SbM5ItvMbpFwiuWaJk1n3wRRmtiZSj58Qlo3IieVfzclvje_iQjczYy45vVQb3ZMxZh627ujQn-1qJuRgIzjpenpYQp8mBqVBXUchl8Vyzvd4eyIylSOMIygl_z6jM0cy584ovqz3hnBMBYjoadI1fVYqV3xm8eX2MJ"
+                    src={`https://play.google.com/work/embedded/search?token=WAH7Pcn-Y-JcQazZ1IAWO0qDV38ofNlHRou_-7JFUPkgeeJhebpq3yzIaXqvMDuxZZb7N7QJDK_3oR1LgnkbtzX2S4EBB4X8W5qxrfzSaGA-AxsMfAiknnJ_c-6BDXDMSNsEIyL4SJJYrZZWuhCqaRnvc1_3lommzms-bkjfo6-EzGOm0JQ7dvWY`}
                     width="100%"
                     height="600"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
                     title="Managed Google Play Applications">
                   </iframe>
                 </div>

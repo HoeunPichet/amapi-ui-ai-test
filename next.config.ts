@@ -1,16 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // experimental: {
-  //   turbo: {
-  //     rules: {
-  //       '*.css': {
-  //         loaders: ['@tailwindcss/vite'],
-  //         as: '*.css',
-  //       },
-  //     },
-  //   },
-  // },
+  allowedDevOrigins: [
+    'https://hillier-xuan-rooky.ngrok-free.dev',
+  ],
+  experimental: {
+    turbo: {
+      rules: {
+        '*.css': {
+          loaders: ['@tailwindcss/vite'],
+          as: '*.css',
+        },
+      },
+    }
+  },
   async rewrites() {
     return [
       {
