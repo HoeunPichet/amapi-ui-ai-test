@@ -1,4 +1,4 @@
-This is a your boy. I'm Pichet.
+Hello, every! This is a your boy. I'm Pichet.
 ## Getting Started
 
 First, run the development server:
